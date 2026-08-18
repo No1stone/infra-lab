@@ -1,0 +1,5 @@
+# ingress-nginx. 차트는 아직 설치하지 않는다.
+controller:
+  replicaCount: 1
+  service:
+    type: LoadBalancer

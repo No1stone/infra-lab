@@ -43,6 +43,29 @@ Ubuntu 노트북 k3d 위에서 다음을 연습합니다.
 - Helm
 - Argo CD
 
+## 저장소 골격
+
+```text
+terraform/
+helm/
+  values/nginx.yaml        # 진입점 ingress-nginx
+k8s/
+  namespace/               # nginx + 워크로드 ns
+  node/                    # 노드당 1 워크로드 (mysql redis kafka rabbitmq vault)
+  deployment/              # replicas: 1, nodeSelector
+  service/
+  ingress/                 # *.lab.origemite.com
+  pod/                     # 디버그용 단독 파드
+  configmap/
+argocd/
+cli/
+```
+
+진입점은 `nginx` 네임스페이스입니다. 데이터 노드 5개는 각각 파드 1개입니다.
+
+infra-dev 리소스 서버에서 가져온 1차 워크로드: mysql, redis, kafka, rabbitmq, vault.  
+다음 후보: prometheus, grafana, elasticsearch, kibana, fluentbit, otel, loki, zipkin.
+
 ## CLI
 
 명령은 두 계층으로 나눕니다.
