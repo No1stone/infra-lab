@@ -17,13 +17,11 @@
                       └─ Argo CD
 ```
 
-MacBook Pro는 Cursor로 이 저장소를 편집하는 작업 머신입니다. 클러스터는 Mac에서 띄우지 않습니다.
-
 ## 자원
 
 | 역할 | 머신 | 스펙 |
 | --- | --- | --- |
-| Cursor 작업 | MacBook Pro | macOS |
+| 보유 | MacBook Pro | macOS |
 | 보유 | MacBook Air | macOS |
 | 공개 입구 | AWS 프록시 | Ubuntu, 1 vCPU / 2 GiB |
 | 랩 호스트 | Ubuntu 노트북 | Intel 8세대 i5, RAM 32 GiB, swap 64 GiB |
