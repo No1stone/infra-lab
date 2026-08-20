@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-label
+  namespace: rabbitmq
+  labels:
+    lab.origemite.com/workload: rabbitmq
+data:
+  selector: lab.origemite.com/workload=rabbitmq
+  node: k3d-lab-agent-3
+  note: kubectl label node k3d-lab-agent-3 lab.origemite.com/workload=rabbitmq --overwrite

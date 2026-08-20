@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-label
+  namespace: kafka
+  labels:
+    lab.origemite.com/workload: kafka
+data:
+  selector: lab.origemite.com/workload=kafka
+  node: k3d-lab-agent-2
+  note: kubectl label node k3d-lab-agent-2 lab.origemite.com/workload=kafka --overwrite

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-label
+  namespace: vault
+  labels:
+    lab.origemite.com/workload: vault
+data:
+  selector: lab.origemite.com/workload=vault
+  node: k3d-lab-agent-4
+  note: kubectl label node k3d-lab-agent-4 lab.origemite.com/workload=vault --overwrite

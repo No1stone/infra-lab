@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-label
+  namespace: redis
+  labels:
+    lab.origemite.com/workload: redis
+data:
+  selector: lab.origemite.com/workload=redis
+  node: k3d-lab-agent-1
+  note: kubectl label node k3d-lab-agent-1 lab.origemite.com/workload=redis --overwrite

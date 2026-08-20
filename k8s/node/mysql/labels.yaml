@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-label
+  namespace: mysql
+  labels:
+    lab.origemite.com/workload: mysql
+data:
+  selector: lab.origemite.com/workload=mysql
+  node: k3d-lab-agent-0
+  note: kubectl label node k3d-lab-agent-0 lab.origemite.com/workload=mysql --overwrite
