@@ -4,12 +4,13 @@ metadata:
   name: rabbitmq
   namespace: rabbitmq
 spec:
+  type: ClusterIP
   selector:
     app: rabbitmq
   ports:
     - name: amqp
       port: 5672
-      targetPort: 5672
+      targetPort: amqp
     - name: ui
       port: 15672
-      targetPort: 15672
+      targetPort: ui

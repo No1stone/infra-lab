@@ -4,12 +4,13 @@ metadata:
   name: kafka
   namespace: kafka
 spec:
+  type: ClusterIP
   selector:
     app: kafka
   ports:
     - name: internal
       port: 9092
-      targetPort: 9092
+      targetPort: internal
     - name: external
       port: 19092
-      targetPort: 19092
+      targetPort: external
