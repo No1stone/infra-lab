@@ -2,20 +2,7 @@
 
 홈랩에서 Kubernetes 운영 스택을 연습하는 저장소입니다.
 
-공개 입구는 AWS 프록시이고, 실제 클러스터는 집 Ubuntu 노트북의 k3d에서 돌아갑니다. 프록시가 `*.lab.origemite.com`을 노트북으로 넘깁니다.
-
-## 구조
-
-```text
-인터넷
-  └─ *.lab.origemite.com
-       └─ AWS 프록시 (Ubuntu, 1 vCPU / 2 GiB)
-            └─ reverse SSH
-                 └─ Ubuntu 노트북 (k3d)
-                      ├─ Terraform
-                      ├─ Helm
-                      └─ Argo CD
-```
+기준은 [2026년 쿠버네티스 표준 아키텍처](ref/Ref.md)입니다. 런타임은 Ubuntu 노트북의 **k3d**이고, 공개 입구는 AWS 프록시가 `*.lab.origemite.com`을 노트북으로 넘깁니다.
 
 ## 자원
 
@@ -28,52 +15,123 @@
 
 ## 연결
 
-1. Ubuntu 노트북이 AWS 프록시로 reverse SSH를 유지합니다.
-2. 프록시에서 노트북으로 SSH 접속이 가능합니다.
-3. 프록시가 `*.lab.origemite.com` 트래픽을 노트북으로 전달합니다.
-4. 노트북의 k3d가 랩 서비스를 받아 처리합니다.
-
-## 실습 스택
-
-Ubuntu 노트북 k3d 위에서 다음을 연습합니다.
-
-- Terraform
-- Helm
-- Argo CD
-
-## 저장소 골격
-
 ```text
-terraform/
-helm/
-  values/nginx.yaml        # 진입점 ingress-nginx
-k8s/
-  namespace/               # nginx + 워크로드 ns
-  node/                    # 노드당 1 워크로드 (mysql redis kafka rabbitmq vault)
-  deployment/              # replicas: 1, nodeSelector
-  service/
-  ingress/                 # *.lab.origemite.com
-  pod/                     # 디버그용 단독 파드
-  configmap/
-argocd/
-cli/
-ref/                       # 외부 참고 링크
+인터넷
+  ├─ *.lab.origemite.com              → 플랫폼 (argocd, grafana, …)
+  └─ *.nginx|gateway|… .lab.origemite.com  → Phase 7 서브존
+       └─ AWS 프록시 (Host별 upstream)
+            └─ reverse SSH (80/443 + 8201–8207)
+                 └─ Ubuntu 노트북 (k3d / MetalLB .201–.207)
 ```
 
-진입점은 `nginx` 네임스페이스입니다. 데이터 노드 5개는 각각 파드 1개입니다.
+1. Ubuntu 노트북이 AWS 프록시로 reverse SSH를 유지합니다.
+2. DNS: `origemite.com`은 개인용(이 랩에서 안 건드림). 이름만 [`dns/inventory.yaml`](dns/inventory.yaml). 전용 도메인은 나중에 구매·연결.
+3. 프록시가 Host로 분기해 MetalLB `.201`–`.207`에 넘깁니다([`cli/ops/proxy.md`](cli/ops/proxy.md)).
 
-infra-dev 리소스 서버에서 가져온 1차 워크로드: mysql, redis, kafka, rabbitmq, vault.  
-다음 후보: prometheus, grafana, elasticsearch, kibana, fluentbit, otel, loki, zipkin.
+## 커리큘럼
+
+클러스터 이름 `lab`. 서버 1 + 에이전트 5. 데이터 워크로드는 **1 노드 = 파드 1개** (`lab.origemite.com/workload=<이름>`).
+
+| 단계 | 내용 | 경로 |
+| --- | --- | --- |
+| 0 | k3d 클러스터 생성, 노드 라벨 | [`cli/ops/k3d.md`](cli/ops/k3d.md), [`cli/ops/kube.md`](cli/ops/kube.md) |
+| 0T | **Terraform** — k3d `lab` 부트스트랩 IaC (필수, 스텁→구현) | [`terraform/`](terraform/), [`cli/ops/terraform.md`](cli/ops/terraform.md) |
+| 1 | MetalLB → ingress-nginx → cert-manager | [`helm/values/`](helm/values/), [`cli/ops/helm.md`](cli/ops/helm.md) |
+| 2 | 데이터 워크로드 (raw k8s) | [`k8s/`](k8s/) |
+| 3 | 관측: Prometheus/Grafana, Loki, Tempo, OTel, Fluent Bit | [`helm/values/`](helm/values/) |
+| 4 | GitOps·UI: Argo CD, Headlamp | [`helm/values/argocd.yaml`](helm/values/argocd.yaml), [`helm/values/headlamp.yaml`](helm/values/headlamp.yaml) |
+| 5 | (선택) OpenSearch | [`helm/values/opensearch.yaml`](helm/values/opensearch.yaml) |
+| 6A | Cilium (CNI) | [`cli/ops/cilium.md`](cli/ops/cilium.md), [`helm/values/cilium.yaml`](helm/values/cilium.yaml) |
+| 6B | Istio + Kiali | [`cli/ops/istio.md`](cli/ops/istio.md), [`helm/values/istiod.yaml`](helm/values/istiod.yaml), [`helm/values/kiali.yaml`](helm/values/kiali.yaml) |
+| 6B-m | **mTLS** — Istio PeerAuthentication STRICT (east-west) | [`cli/ops/mtls.md`](cli/ops/mtls.md), [`k8s/peerauthentication/`](k8s/peerauthentication/) |
+| 6C | Harbor | [`cli/ops/harbor.md`](cli/ops/harbor.md), [`helm/values/harbor.yaml`](helm/values/harbor.yaml) |
+| 6D | **Keycloak** (필수) — OIDC / SSO | [`cli/ops/keycloak.md`](cli/ops/keycloak.md), [`helm/values/keycloak.yaml`](helm/values/keycloak.yaml) |
+| 7 | **진입점 비교** — 7 컨트롤러 동시 실습 | [`cli/ops/ingress-compare.md`](cli/ops/ingress-compare.md), [`k8s/gateway/`](k8s/gateway/) |
+| 이후 | Argo Application (GitOps sync), Keycloak→Argo/Kiali OIDC | `argocd/` |
+| 별도 | **Kubeflow (MLOps)** — 이 랩 k3d에 올리지 않음 | 별도 머신·클러스터 |
+
+실습 도구 흐름: **Terraform(또는 k3d 수동) → Helm → kubectl → Argo CD**. Keycloak·mesh mTLS는 필수 실습.
+
+## 튜토리얼
+
+단계별 서술형 가이드: [`doc/README.md`](doc/README.md)
+
+**Kubeflow**는 모니터링이 아니라 ML 파이프라인용입니다. 메모리 부담이 커서 **infra-lab(Ubuntu k3d)과 리소스를 분리**하고, ML 전용 호스트/클러스터에 할당합니다.
+
+## 스택
+
+### 진입점
+
+- 네임스페이스 `nginx`, Ingress class `nginx`
+- 호스트 `*.lab.origemite.com` (예: `argocd`, `grafana`, `vault`, `rabbitmq`, `headlamp`)
+- ingress-nginx는 학습용. 2026 표준상 EOL 이후 Gateway API 전환을 염두에 둡니다.
+
+## 진입점 비교 (Phase 7)
+
+7개 컨트롤러가 공유 데모 앱 [`demo-echo`](k8s/deployment/demo-echo.yaml)로 동일 Host 라우팅을 검증한다. MetalLB IP `.201`–`.207`에 컨트롤러별 LoadBalancer를 고정한다.
+
+| 호스트 | API | 컨트롤러 | MetalLB IP |
+| --- | --- | --- | --- |
+| demo.nginx.lab.origemite.com | Ingress | ingress-nginx | 172.18.255.201 |
+| demo.gateway.lab.origemite.com | Gateway API | Envoy Gateway | 172.18.255.202 |
+| demo.cilium.lab.origemite.com | Gateway API | Cilium Gateway | 172.18.255.203 |
+| demo.kong.lab.origemite.com | Ingress | Kong | 172.18.255.204 |
+| demo.traefik.lab.origemite.com | Ingress | Traefik | 172.18.255.205 |
+| demo.istio.lab.origemite.com | Gateway API | Istio Gateway | 172.18.255.206 |
+| demo.haproxy.lab.origemite.com | Ingress | HAProxy Ingress | 172.18.255.207 |
+
+- **동시 기동**: idle 기준 RAM 약 **+4GiB** (32GiB+swap64에서 Phase 1–6과 병행 가능).
+- **DNS (서브존)**: Route53은 외부 관리. 이름·MetalLB 매핑만 [`dns/inventory.yaml`](dns/inventory.yaml). 프록시 Host 분기: [`cli/ops/proxy.md`](cli/ops/proxy.md).
+
+### 1차 데이터 노드 (raw k8s)
+
+| 노드 라벨 | 네임스페이스 | 비고 |
+| --- | --- | --- |
+| mysql | mysql | TCP |
+| redis | redis | TCP |
+| kafka | kafka | TCP |
+| rabbitmq | rabbitmq | UI `rabbitmq.lab.origemite.com` |
+| vault | vault | UI `vault.lab.origemite.com` |
+
+### 플랫폼·관측 (Helm)
+
+| values | 역할 |
+| --- | --- |
+| `metallb.yaml` | LoadBalancer IP |
+| `nginx.yaml` | Ingress 컨트롤러 |
+| `cert-manager.yaml` | 인증서 |
+| `kube-prometheus-stack.yaml` | Prometheus + Grafana |
+| `loki.yaml` / `fluent-bit.yaml` | 로그 |
+| `tempo.yaml` / `opentelemetry-collector.yaml` | 트레이스 (Zipkin 대신 Tempo) |
+| `argocd.yaml` | GitOps |
+| `headlamp.yaml` | 클러스터 UI |
+| `opensearch.yaml` | 로그 검색 2차 (ES/Kibana 대신) |
+| `cilium.yaml` | CNI (Phase 6A) |
+| `istiod.yaml` / `kiali.yaml` | 서비스 메시·메시 UI (Phase 6B) |
+| `harbor.yaml` | 컨테이너 레지스트리 (Phase 6C) |
+| `keycloak.yaml` | IAM (Phase 6D) |
+| `kong.yaml` / `traefik.yaml` / `haproxy-ingress.yaml` | Ingress 비교 (Phase 7) |
+| `envoy-gateway.yaml` / `istio-gateway.yaml` | Gateway API 비교 (Phase 7) |
+
+Phase 6에서 Cilium, Istio, Harbor, Keycloak을 이 랩에 추가한다. Phase 7에서 진입점 7종을 비교한다. **Kubeflow, Rook, Teleport**는 이 클러스터에 넣지 않는다.
+
+## 저장소
+
+```text
+helm/values/     # 외부 차트 values
+k8s/             # namespace node deployment service ingress gateway configmap
+argocd/          # project / application (다음 단계)
+terraform/       # 클러스터 부트스트랩 (다음 단계)
+cli/doc/         # 기본 명령 (<자리표시자>)
+cli/ops/         # 실명 복붙 명령
+ref/             # 2026 표준 등 외부 참고
+```
 
 ## CLI
 
-명령은 두 계층으로 나눕니다.
-
-- `cli/doc/` — 기본·자주 쓰는 명령. 자리표시자 `<이름>`을 씁니다.
-- `cli/ops/` — 작업 중 나온 실명 명령. 복사해서 바로 실행합니다.
-
-리소스 파일은 `k3d`, `terraform`, `helm`, `argocd`, `kube`, `proxy`입니다.
+- [`cli/doc/`](cli/doc/) — 자주 쓰는 기본 명령
+- [`cli/ops/`](cli/ops/) — 클러스터 `lab` 기준 복붙 명령 (`k3d`, `helm`, `kube`, `metallb`, `cert-manager`, `cilium`, `istio`, `harbor`, `keycloak`, `ingress-compare`, …)
 
 ## 참고
 
-외부 아키텍처·표준 자료는 [`ref/Ref.md`](ref/Ref.md)에 모아 둡니다.
+- [`ref/Ref.md`](ref/Ref.md) — 2026년 쿠버네티스 표준 아키텍처 요약·링크
