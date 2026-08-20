@@ -107,7 +107,7 @@ helm upgrade --install fluent-bit fluent/fluent-bit \
 
 ## Phase 3 — GitOps·UI
 
-Argo CD 설치 (argocd) — argocd.lab.origemite.com
+Argo CD 설치 (argocd) — argocd.nginx.lab.origemite.com
 ```bash
 helm upgrade --install argocd argo/argo-cd \
   -n argocd \
@@ -117,7 +117,7 @@ helm upgrade --install argocd argo/argo-cd \
   --timeout 10m
 ```
 
-Headlamp 설치 (headlamp) — headlamp.lab.origemite.com
+Headlamp 설치 (headlamp) — headlamp.nginx.lab.origemite.com
 ```bash
 helm upgrade --install headlamp headlamp/headlamp \
   -n headlamp \
@@ -188,7 +188,7 @@ helm upgrade --install kiali-server kiali/kiali-server \
   --timeout 10m
 ```
 
-Harbor 설치 (harbor) — harbor.lab.origemite.com, harbor ops에서 Secret 선행
+Harbor 설치 (harbor) — harbor.nginx.lab.origemite.com, harbor ops에서 Secret 선행
 ```bash
 helm upgrade --install harbor harbor/harbor \
   -n harbor \
@@ -198,7 +198,7 @@ helm upgrade --install harbor harbor/harbor \
   --timeout 15m
 ```
 
-Keycloakx 설치 (keycloak) — keycloak.lab.origemite.com, keycloak ops에서 Secret 선행
+Keycloakx 설치 (keycloak) — keycloak.nginx.lab.origemite.com, keycloak ops에서 Secret 선행
 ```bash
 helm upgrade --install keycloak codecentric/keycloakx \
   -n keycloak \
@@ -286,7 +286,7 @@ helm upgrade --install haproxy-ingress haproxytech/kubernetes-ingress \
   --timeout 10m
 ```
 
-데모 매니페스트·curl — [`cli/ops/ingress-compare.md`](ingress-compare.md)
+데모 매니페스트·**7개 한 번에 설치·curl** — [`cli/ops/ingress-compare.md`](ingress-compare.md)
 
 lab 클러스터 Helm 릴리스 전체 확인
 ```bash

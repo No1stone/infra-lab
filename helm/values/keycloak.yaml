@@ -14,7 +14,7 @@ ingress:
   enabled: true
   ingressClassName: nginx
   rules:
-    - host: keycloak.lab.origemite.com
+    - host: keycloak.nginx.lab.origemite.com
       paths:
         - path: /
           pathType: Prefix

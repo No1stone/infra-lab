@@ -1,28 +1,24 @@
 # proxy
 
-Ubuntu 노트북이 AWS 프록시로 `ssh -R` reverse SSH를 연다. 프록시는 그 터널(`127.0.0.1:<remote-port>`)로 노트북에 접속하고, `*.lab.origemite.com` 트래픽을 노트북(k3d)으로 넘긴다. 클러스터는 Mac에서 띄우지 않는다.
+Ubuntu 노트북이 AWS 프록시로 `ssh -R` reverse SSH를 연다. 프록시는 그 터널(`127.0.0.1:<remote-port>`)로 노트북에 접속하고, **3뎁스** `*.<게이트웨이>.lab.origemite.com` 트래픽을 노트북(k3d)으로 넘긴다. 클러스터는 Mac에서 띄우지 않는다.
 
-## Phase 7 서브존 DNS (`*.<controller>.lab.origemite.com`)
+## Phase 7·플랫폼 DNS (3뎁스)
 
-Phase 7 비교 호스트는 `demo.<controller>.lab.origemite.com` (3레이블). 부모 `*.lab.origemite.com`은 한 레이블만 덮는다.
+공개 호스트는 `<앱>.<게이트웨이>.lab.origemite.com`만. 2뎁스(`*.lab.origemite.com` 앱명)는 쓰지 않는다.
 
-Route53은 **실제 인프라·개인 존(`origemite.com`)** 이라 이 저장소·Terraform 밖에서만 관리한다. 변경 명령을 두지 않는다. destroy가 DNS에 영향 주면 안 된다. 이름 목록만 [`dns/inventory.yaml`](../../dns/inventory.yaml).
+Route53은 개인 존 — 이 저장소에서 변경하지 않는다. [`dns/inventory.yaml`](../../dns/inventory.yaml).
 
-| DNS 레코드 (존재 표기) | 대상 | 용도 |
-| --- | --- | --- |
-| `*.lab.origemite.com` | `<proxy-eip>` | 플랫폼 |
-| `*.<controller>.lab.origemite.com` | `<proxy-eip>` | Phase 7 |
-
-`<controller>`: `nginx`, `gateway`, `cilium`, `kong`, `traefik`, `istio`, `haproxy`.
-
-해석 확인(읽기)만.
+| DNS 레코드 (존재 표기) | 용도 |
+| --- | --- |
+| `*.nginx.lab.origemite.com` | 플랫폼 + demo.nginx |
+| `*.<gateway>.lab.origemite.com` | Phase 7 기타 게이트웨이 |
 
 ```bash
+dig +short argocd.nginx.lab.origemite.com
 dig +short demo.nginx.lab.origemite.com
-dig +short demo.<controller>.lab.origemite.com
 ```
 
-DNS만으로 7개 MetalLB에 안 간다. 프록시 Host 분기 — [`cli/ops/proxy.md`](../ops/proxy.md), [`cli/ops/dns-subzone.md`](../ops/dns-subzone.md).
+프록시 Host 분기 — [`cli/ops/proxy.md`](../ops/proxy.md), [`cli/ops/dns-subzone.md`](../ops/dns-subzone.md).
 
 ## Reverse SSH 터널 생성
 
@@ -488,12 +484,12 @@ sudo nginx -s reload
 
 ## nginx HTTP / stream
 
-HTTP에서 `*.lab.origemite.com`을 터널로 넘긴다.
+HTTP에서 `*.nginx.lab.origemite.com`을 터널로 넘긴다.
 
 ```nginx
 server {
     listen 80;
-    server_name *.lab.origemite.com;
+    server_name *.nginx.lab.origemite.com;
     location / {
         proxy_pass http://127.0.0.1:<http-remote-port>;
         proxy_set_header Host $host;
@@ -554,49 +550,49 @@ curl -Ik --max-time 5 https://127.0.0.1/
 와일드카드 도메인 HTTP를 본다.
 
 ```bash
-curl -I --max-time 10 http://<host>.lab.origemite.com/
+curl -I --max-time 10 http://<app>.<gateway>.lab.origemite.com/
 ```
 
 와일드카드 도메인 HTTPS를 본다.
 
 ```bash
-curl -Ik --max-time 10 https://<host>.lab.origemite.com/
+curl -Ik --max-time 10 https://<app>.<gateway>.lab.origemite.com/
 ```
 
 본문 없이 상태 코드와 시간을 본다.
 
 ```bash
-curl -sS -o /dev/null -w '%{http_code} %{time_total}\n' --max-time 10 https://<host>.lab.origemite.com/
+curl -sS -o /dev/null -w '%{http_code} %{time_total}\n' --max-time 10 https://<app>.<gateway>.lab.origemite.com/
 ```
 
 Host 헤더만 바꿔 프록시 로컬로 친다.
 
 ```bash
-curl -I --max-time 5 -H 'Host: <host>.lab.origemite.com' http://127.0.0.1/
+curl -I --max-time 5 -H 'Host: <app>.<gateway>.lab.origemite.com' http://127.0.0.1/
 ```
 
 DNS를 고정해 프록시 IP로 직접 친다.
 
 ```bash
-curl -Ik --max-time 10 --resolve <host>.lab.origemite.com:443:<proxy-ip> https://<host>.lab.origemite.com/
+curl -Ik --max-time 10 --resolve <app>.<gateway>.lab.origemite.com:443:<proxy-ip> https://<app>.<gateway>.lab.origemite.com/
 ```
 
 TLS 핸드셰이크만 본다.
 
 ```bash
-echo | openssl s_client -connect <host>.lab.origemite.com:443 -servername <host>.lab.origemite.com
+echo | openssl s_client -connect <app>.<gateway>.lab.origemite.com:443 -servername <app>.<gateway>.lab.origemite.com
 ```
 
 도메인 A 레코드를 본다.
 
 ```bash
-dig +short <host>.lab.origemite.com
+dig +short <app>.<gateway>.lab.origemite.com
 ```
 
 호스트명 해석을 본다.
 
 ```bash
-getent hosts <host>.lab.origemite.com
+getent hosts <app>.<gateway>.lab.origemite.com
 ```
 
 ## journalctl
@@ -896,7 +892,7 @@ curl -Ik --max-time 5 https://127.0.0.1/
 Host 헤더로 인그레스 가상 호스트를 친다.
 
 ```bash
-curl -I --max-time 5 -H 'Host: <host>.lab.origemite.com' http://127.0.0.1/
+curl -I --max-time 5 -H 'Host: <app>.<gateway>.lab.origemite.com' http://127.0.0.1/
 ```
 
 k3d 클러스터 상세를 본다.
@@ -948,5 +944,5 @@ pgrep -af 'ssh .*-R|autossh'; ss -tlnp | grep -E ':(22|80|443)\b'
 공인 도메인과 로컬을 비교해 친다.
 
 ```bash
-curl -sS -o /dev/null -w 'local:%{http_code}\n' --max-time 5 http://127.0.0.1/; curl -sS -o /dev/null -w 'domain:%{http_code}\n' --max-time 10 http://<host>.lab.origemite.com/
+curl -sS -o /dev/null -w 'local:%{http_code}\n' --max-time 5 http://127.0.0.1/; curl -sS -o /dev/null -w 'domain:%{http_code}\n' --max-time 10 http://<app>.<gateway>.lab.origemite.com/
 ```

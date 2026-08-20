@@ -1,6 +1,6 @@
 # keycloak ops
 
-Keycloak IAM. 호스트 `keycloak.lab.origemite.com`. 관리자 비밀번호는 로컬에서만 입력한다.
+Keycloak IAM. 호스트 `keycloak.nginx.lab.origemite.com`. 관리자 비밀번호는 로컬에서만 입력한다.
 
 네임스페이스 적용
 ```bash
@@ -21,7 +21,7 @@ helm repo add codecentric https://codecentric.github.io/helm-charts
 helm repo update
 ```
 
-Keycloakx 설치 (keycloak) — keycloak.lab.origemite.com
+Keycloakx 설치 (keycloak) — keycloak.nginx.lab.origemite.com
 ```bash
 helm upgrade --install keycloak codecentric/keycloakx \
   -n keycloak \

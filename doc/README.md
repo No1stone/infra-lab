@@ -14,7 +14,7 @@ infra-lab 실습을 단계별로 따라 하는 **서술형 가이드**입니다.
 
 - **캡처**: 각 챕터의 `images/<phase>/`에 PNG 등을 저장하고 본문에서 상대 경로로 참조한다.
 - **에러**: 챕터 표에 요약, 상세는 `troubleshooting/`에 추가한다.
-- **DNS**: `origemite.com` 개인 존은 이 랩에서 **변경하지 않는다**. 이름·매핑은 [`dns/inventory.yaml`](../dns/inventory.yaml) 참조만.
+- **DNS**: `origemite.com` 개인 존은 변경하지 않는다. 랩 호스트는 **3뎁스만** (`<앱>.<게이트웨이>.lab…`). 2뎁스 금지. [`dns/inventory.yaml`](../dns/inventory.yaml)
 
 전체 트리: [`tree.md`](tree.md)
 

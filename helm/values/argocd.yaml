@@ -5,7 +5,7 @@ server:
   ingress:
     enabled: true
     ingressClassName: nginx
-    hostname: argocd.lab.origemite.com
+    hostname: argocd.nginx.lab.origemite.com
 
 redis-ha:
   enabled: false

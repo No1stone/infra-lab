@@ -1,5 +1,6 @@
 # lab Ingress 진입점. ingress-nginx는 EOL 예정 — 이후 Gateway API 전환 검토.
-# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+# 호스트는 values에 두지 않음 → k8s/ingress/demo-nginx.yaml (demo.nginx.lab.origemite.com)
+# MetalLB: 172.18.255.201
 controller:
   replicaCount: 1
   service:

@@ -2,7 +2,7 @@
 
 홈랩에서 Kubernetes 운영 스택을 연습하는 저장소입니다.
 
-기준은 [2026년 쿠버네티스 표준 아키텍처](ref/Ref.md)입니다. 런타임은 Ubuntu 노트북의 **k3d**이고, 공개 입구는 AWS 프록시가 `*.lab.origemite.com`을 노트북으로 넘깁니다.
+기준은 [2026년 쿠버네티스 표준 아키텍처](ref/Ref.md)입니다. 런타임은 Ubuntu 노트북의 **k3d**이고, 공개 호스트는 **3뎁스** `<앱>.<게이트웨이>.lab.origemite.com`만 씁니다 (2뎁스 `*.lab.origemite.com` 앱 호스트는 쓰지 않음).
 
 ## 자원
 
@@ -17,15 +17,16 @@
 
 ```text
 인터넷
-  ├─ *.lab.origemite.com              → 플랫폼 (argocd, grafana, …)
-  └─ *.nginx|gateway|… .lab.origemite.com  → Phase 7 서브존
-       └─ AWS 프록시 (Host별 upstream)
+  └─ *.nginx|gateway|cilium|… .lab.origemite.com   (3뎁스만)
+       └─ AWS 프록시 (Host → 게이트웨이별 upstream)
             └─ reverse SSH (80/443 + 8201–8207)
                  └─ Ubuntu 노트북 (k3d / MetalLB .201–.207)
 ```
 
+예: `argocd.nginx.lab.origemite.com`, `rabbitmq.nginx.lab.origemite.com`, `demo.istio.lab.origemite.com`.
+
 1. Ubuntu 노트북이 AWS 프록시로 reverse SSH를 유지합니다.
-2. DNS: `origemite.com`은 개인용(이 랩에서 안 건드림). 이름만 [`dns/inventory.yaml`](dns/inventory.yaml). 전용 도메인은 나중에 구매·연결.
+2. DNS: `origemite.com`은 개인용(이 랩에서 안 건드림). 이름만 [`dns/inventory.yaml`](dns/inventory.yaml).
 3. 프록시가 Host로 분기해 MetalLB `.201`–`.207`에 넘깁니다([`cli/ops/proxy.md`](cli/ops/proxy.md)).
 
 ## 커리큘럼
@@ -62,8 +63,10 @@
 
 ### 진입점
 
-- 네임스페이스 `nginx`, Ingress class `nginx`
-- 호스트 `*.lab.origemite.com` (예: `argocd`, `grafana`, `vault`, `rabbitmq`, `headlamp`)
+- 네임스페이스 `nginx`, Ingress class `nginx` (플랫폼 기본 게이트웨이)
+- 호스트 **3뎁스만**: `<앱>.nginx.lab.origemite.com` (예: `argocd`, `grafana`, `vault`, `rabbitmq`, `headlamp`)
+- 다른 게이트웨이로 붙일 때는 `<앱>.<게이트웨이>.lab.origemite.com`
+- 2뎁스(`rabbitmq.lab.origemite.com` 등)는 쓰지 않는다
 - ingress-nginx는 학습용. 2026 표준상 EOL 이후 Gateway API 전환을 염두에 둡니다.
 
 ## 진입점 비교 (Phase 7)
@@ -90,8 +93,8 @@
 | mysql | mysql | TCP |
 | redis | redis | TCP |
 | kafka | kafka | TCP |
-| rabbitmq | rabbitmq | UI `rabbitmq.lab.origemite.com` |
-| vault | vault | UI `vault.lab.origemite.com` |
+| rabbitmq | rabbitmq | UI `rabbitmq.nginx.lab.origemite.com` |
+| vault | vault | UI `vault.nginx.lab.origemite.com` |
 
 ### 플랫폼·관측 (Helm)
 

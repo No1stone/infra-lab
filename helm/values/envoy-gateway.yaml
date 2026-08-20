@@ -1,7 +1,8 @@
 # envoyproxy/gateway-helm (OCI). Gateway API 컨트롤러.
+# 호스트는 values에 두지 않음 → k8s/gateway/demo-envoy.yaml (demo.gateway.lab.origemite.com)
+# MetalLB: Gateway 생성 후 proxy Service에 172.18.255.202 고정
 # helm install eg oci://docker.io/envoyproxy/gateway-helm \
 #   -n envoy-gateway-system --create-namespace -f helm/values/envoy-gateway.yaml
-# Gateway 생성 후 proxy Service에 MetalLB IP 172.18.255.202 고정 (필요 시 annotation).
 deployment:
   replicas: 1
   envoyGateway:

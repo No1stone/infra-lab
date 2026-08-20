@@ -6,9 +6,11 @@
 
 Phase 7 FQDN은 `demo.<controller>.lab.origemite.com` (3레이블). DNS 이름 목록(외부 Route53, 변경 없음)은 [`dns/inventory.yaml`](../../dns/inventory.yaml) / [`dns-subzone.md`](dns-subzone.md).
 
-**부모 존** `*.lab.origemite.com` (`argocd.lab…` 등) → 기존 reverse SSH 터널 → 노트북 80/443 → 기본 ingress (.201 또는 k3d published 80/443).
+**기본 입구 nginx** (`*.nginx.lab.origemite.com`, `.201`) — 플랫폼·demo.nginx. 기존 80/443 터널.
 
-**서브존** 7종 → 프록시 nginx가 `server_name`으로 분기 → 노트북 `127.0.0.1:820x` → MetalLB `172.18.255.20x:80`.
+**다른 게이트웨이** (`demo.gateway…` 등) → 프록시 nginx `server_name` → 노트북 `820x` → MetalLB `.202`–`.207`.
+
+2뎁스(`argocd.lab…`)는 쓰지 않는다. 전부 `<앱>.<게이트웨이>.lab.origemite.com`.
 
 | Host | 프록시 upstream (터널) | 노트북 로컬 | MetalLB |
 | --- | --- | --- | --- |
@@ -25,10 +27,10 @@ Phase 7 FQDN은 `demo.<controller>.lab.origemite.com` (3레이블). DNS 이름 �
 `/etc/nginx/sites-available/phase7-subzones` 예시. `<http-remote-port>`는 기존 부모 터널(80) 포트.
 
 ```nginx
-# 부모 존 — 기존
+# 기본 입구 nginx — *.nginx.lab (플랫폼 + demo.nginx)
 server {
     listen 80;
-    server_name *.lab.origemite.com;
+    server_name *.nginx.lab.origemite.com;
     location / {
         proxy_pass http://127.0.0.1:<http-remote-port>;
         proxy_set_header Host $host;
@@ -37,7 +39,7 @@ server {
     }
 }
 
-# Phase 7 서브존 — Host별 820x
+# Phase 7 — 다른 게이트웨이 Host별 820x
 server {
     listen 80;
     server_name demo.nginx.lab.origemite.com;

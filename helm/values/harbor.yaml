@@ -10,9 +10,9 @@ expose:
   ingress:
     className: nginx
     hosts:
-      core: harbor.lab.origemite.com
+      core: harbor.nginx.lab.origemite.com
 
-externalURL: https://harbor.lab.origemite.com
+externalURL: https://harbor.nginx.lab.origemite.com
 
 notary:
   enabled: false

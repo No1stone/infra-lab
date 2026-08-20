@@ -1,6 +1,6 @@
 # harbor ops
 
-Harbor 레지스트리. 호스트 `harbor.lab.origemite.com`. 관리자 비밀번호는 로컬에서만 입력한다.
+Harbor 레지스트리. 호스트 `harbor.nginx.lab.origemite.com`. 관리자 비밀번호는 로컬에서만 입력한다.
 
 네임스페이스 적용
 ```bash
@@ -20,7 +20,7 @@ helm repo add harbor https://helm.goharbor.io
 helm repo update
 ```
 
-Harbor 설치 (harbor) — harbor.lab.origemite.com
+Harbor 설치 (harbor) — harbor.nginx.lab.origemite.com
 ```bash
 helm upgrade --install harbor harbor/harbor \
   -n harbor \

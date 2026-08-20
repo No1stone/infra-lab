@@ -1,6 +1,6 @@
 # argocd
 
-k3d 랩의 Argo CD CLI. Ingress(`*.lab.origemite.com`) 뒤에서는 `--grpc-web`이 필요하고, 랩 인증서는 `--insecure`로 건너뛴다. in-cluster 목적지는 `https://kubernetes.default.svc`다. `-n argocd`는 kubectl/admin/`--core`용 네임스페이스이고, Application 네임스페이스는 `-N`/`--app-namespace`다.
+k3d 랩의 Argo CD CLI. Ingress(`argocd.nginx.lab.origemite.com` 등 3뎁스) 뒤에서는 `--grpc-web`이 필요하고, 랩 인증서는 `--insecure`로 건너뛴다. in-cluster 목적지는 `https://kubernetes.default.svc`다. `-n argocd`는 kubectl/admin/`--core`용 네임스페이스이고, Application 네임스페이스는 `-N`/`--app-namespace`다.
 
 ## 공통 플래그
 

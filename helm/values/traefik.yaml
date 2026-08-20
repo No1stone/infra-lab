@@ -1,5 +1,6 @@
 # traefik/traefik. 기본 IngressClass 아님 — nginx와 병행 실습용.
-# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+# 호스트는 values에 두지 않음 → k8s/ingress/demo-traefik.yaml (demo.traefik.lab.origemite.com)
+# MetalLB: 172.18.255.205
 deployment:
   replicas: 1
 

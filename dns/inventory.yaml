@@ -3,29 +3,23 @@
 # origemite.com = 개인용 도메인. 이 저장소에서 생성·변경·삭제하지 않는다.
 # destroy / terraform destroy / 랩 초기화 시 DNS·프록시 실제 인프라에 손대지 않는다.
 #
-# 나중에 랩·서비스용 도메인을 따로 사면 그때 연결한다 (future_lab_zone).
-# 지금은 FQDN·MetalLB 매핑만 적어 매니페스트/프록시 Host에 참고한다.
+# 랩 공개 FQDN 규칙 (3뎁스만):
+#   <앱>.<게이트웨이>.lab.origemite.com
+# 예: argocd.nginx.lab…, demo.istio.lab…
+# 2뎁스(<앱>.lab.origemite.com)는 쓰지 않는다.
 #
 # apply / aws route53 / terraform aws_route53_* 금지.
 
 personal_zone: origemite.com
 personal_zone_mutable_from_this_repo: false
 managed_outside: true
-
-# 향후 구매·연결할 랩 전용 존 (미정). 연결 전엔 비워 둔다.
+hostname_depth: 3
 # future_lab_zone: null
-# future_lab_zone: example-lab.tld
 
 # --- “이미 있거나 쓸 이름” 표기. 생성 명령이 아니다. ---
 
-platform:
-  # - name: "*.lab.origemite.com"
-  #   type: A
-  #   target: <proxy-eip>
-  #   notes: 개인 존. 외부에서만 관리. argocd / grafana / keycloak / …
-
-phase7_subzone_wildcards:
-  # 개인 존 하위. 랩 destroy와 무관. 외부에서만 관리.
+# 게이트웨이별 와일드카드 (외부 관리). 2뎁스 *.lab.origemite.com 은 랩에서 사용 안 함.
+gateway_subzone_wildcards:
   # - name: "*.nginx.lab.origemite.com"
   # - name: "*.gateway.lab.origemite.com"
   # - name: "*.cilium.lab.origemite.com"
@@ -34,8 +28,28 @@ phase7_subzone_wildcards:
   # - name: "*.istio.lab.origemite.com"
   # - name: "*.haproxy.lab.origemite.com"
 
+# 플랫폼 UI — 기본 입구 nginx (.201)
+platform_hosts:
+  - fqdn: argocd.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: grafana.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: headlamp.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: harbor.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: keycloak.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: kiali.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: rabbitmq.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: vault.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+  - fqdn: lab.nginx.lab.origemite.com
+    metallb: 172.18.255.201
+
 phase7_demo_hosts:
-  # 클러스터/프록시 Host용 논리 이름 → MetalLB. DNS A 변경은 이 파일로 하지 않음.
   - fqdn: demo.nginx.lab.origemite.com
     metallb: 172.18.255.201
   - fqdn: demo.gateway.lab.origemite.com

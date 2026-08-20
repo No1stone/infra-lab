@@ -12,7 +12,7 @@ deployment:
     override_yaml:
       spec:
         rules:
-          - host: kiali.lab.origemite.com
+          - host: kiali.nginx.lab.origemite.com
             http:
               paths:
                 - path: /

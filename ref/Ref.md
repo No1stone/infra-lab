@@ -36,7 +36,7 @@
 
 | 컴포넌트 | infra-lab | 표준 문서 쪽 메모 |
 | --- | --- | --- |
-| Ingress | **ingress-nginx** (`nginx` NS, `*.lab.origemite.com`) | EOL 예정 → Gateway API 전환 검토 |
+| Ingress | **ingress-nginx** (`nginx` NS, `*.nginx.lab.origemite.com`) | EOL 예정 → Gateway API 전환 검토 |
 | GitOps | **Argo CD** (실습) | 사실상 표준 |
 | 패키징 | **Helm** (실습) | 사실상 표준 |
 | IaC | **Terraform** (실습) | 클러스터·부트스트랩 |
@@ -47,7 +47,7 @@
 | fluentbit / otel / loki / zipkin | **후보** | 관측·로그·트레이스 |
 | Istio / Harbor / Keycloak / MetalLB 등 | 미도입 | 프로덕션 참고용 |
 
-> **랩 환경**: AWS 프록시 → reverse SSH → Ubuntu 노트북 **k3d**, 호스트 `*.lab.origemite.com`.
+> **랩 환경**: AWS 프록시 → reverse SSH → Ubuntu 노트북 **k3d**, 호스트 3뎁스 `<앱>.<게이트웨이>.lab.origemite.com` (2뎁스 금지).
 
 ---
 

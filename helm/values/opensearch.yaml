@@ -1,5 +1,5 @@
 # opensearch-project/opensearch. phase-2 로그 저장소 — 단일 노드 경량.
-# Dashboards는 opensearch-dashboards 차트 별도. Ingress 예: opensearch-dashboards.lab.origemite.com
+# Dashboards는 opensearch-dashboards 차트 별도. Ingress 예: opensearch-dashboards.nginx.lab.origemite.com
 singleNode: true
 replicas: 1
 

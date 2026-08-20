@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: rabbitmq.lab.origemite.com
+    - host: rabbitmq.nginx.lab.origemite.com
       http:
         paths:
           - path: /

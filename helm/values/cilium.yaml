@@ -1,4 +1,5 @@
 # cilium/cilium. k3d lab CNI.
+# Gateway 호스트는 values에 두지 않음 → k8s/gateway/demo-cilium.yaml (demo.cilium.lab.origemite.com)
 # K3D_FIX_MOUNTS=1 필요. 클러스터 recreate 권장.
 # flannel과 잠시 공존 후 cni.exclusive: true 로 전환.
 # kubeProxyReplacement: true — Service LB 깨지면 partial 로 낮춘다.

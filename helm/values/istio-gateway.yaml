@@ -1,5 +1,6 @@
 # istio/gateway. Gateway API / Istio ingress gateway.
-# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+# 호스트는 values에 두지 않음 → k8s/gateway/demo-istio.yaml (demo.istio.lab.origemite.com)
+# MetalLB: 172.18.255.206
 replicaCount: 1
 
 autoscaling:

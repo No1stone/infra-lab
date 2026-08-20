@@ -13,7 +13,7 @@ ingress:
   enabled: true
   ingressClassName: nginx
   hosts:
-    - host: headlamp.lab.origemite.com
+    - host: headlamp.nginx.lab.origemite.com
       paths:
         - path: /
           type: ImplementationSpecific

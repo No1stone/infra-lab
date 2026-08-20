@@ -1,5 +1,6 @@
 # haproxytech/kubernetes-ingress. IngressClass haproxy.
-# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+# 호스트는 values에 두지 않음 → k8s/ingress/demo-haproxy.yaml (demo.haproxy.lab.origemite.com)
+# MetalLB: 172.18.255.207
 controller:
   replicaCount: 1
   ingressClass: haproxy

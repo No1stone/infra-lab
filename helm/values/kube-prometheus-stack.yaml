@@ -32,7 +32,7 @@ grafana:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - grafana.lab.origemite.com
+      - grafana.nginx.lab.origemite.com
     path: /
 
 prometheus:

@@ -1,6 +1,6 @@
 # mtls ops
 
-Istio mesh **east-west** mTLS. AWS 프록시(`*.lab.origemite.com`) TLS와는 별개다.
+Istio mesh **east-west** mTLS. 엣지 TLS(`*.nginx.lab.origemite.com` 등)와는 별개다.
 
 ## 사전 조건
 

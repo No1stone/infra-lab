@@ -129,7 +129,7 @@ k3d cluster create <cluster> --api-port 0.0.0.0:<host-port>
 k3d cluster create <cluster> --port <host-port>:<container-port>@<nodefilter>
 ```
 
-HTTP 80을 로드밸런서에 연다. `*.lab.origemite.com` Ingress 입구다.
+HTTP 80을 로드밸런서에 연다. `*.nginx.lab.origemite.com` 등 3뎁스 Ingress 입구다.
 ```bash
 k3d cluster create <cluster> --port 80:80@loadbalancer
 ```
@@ -745,9 +745,9 @@ k3d cluster create --config <config-file>
 k3d config --help
 ```
 
-## 랩 조합: `*.lab.origemite.com`
+## 랩 조합: 3뎁스 `*.<게이트웨이>.lab.origemite.com`
 
-프록시가 `*.lab.origemite.com`을 Ubuntu 노트북으로 넘긴다. 노트북 호스트 80/443이 k3d 로드밸런서를 거쳐 k3s Traefik으로 간다.
+프록시가 `*.nginx.lab.origemite.com` 등 게이트웨이 서브존을 Ubuntu 노트북으로 넘긴다. 앱 호스트는 2뎁스(`*.lab.origemite.com`)를 쓰지 않는다. 노트북 호스트 80/443이 k3d 로드밸런서를 거쳐 Ingress로 간다.
 
 실습용 클러스터를 서버 1, 에이전트 2, HTTP/HTTPS 공개로 만들고 생성될 때까지 기다린다.
 ```bash
@@ -773,14 +773,13 @@ k3d cluster create <cluster> \
   --timeout 120s
 ```
 
-도메인 SAN을 API 인증서에 넣고 80/443을 연다. Ingress가 아니라 kube-apiserver용이다.
+도메인 SAN을 API 인증서에 넣고 80/443을 연다. Ingress가 아니라 kube-apiserver용이다. 앱 Ingress 호스트는 별도로 3뎁스 FQDN을 쓴다.
 ```bash
 k3d cluster create <cluster> \
   --api-port 0.0.0.0:<api-port> \
   --port 80:80@loadbalancer \
   --port 443:443@loadbalancer \
-  --k3s-arg "--tls-san=lab.origemite.com@server:*" \
-  --k3s-arg "--tls-san=*.lab.origemite.com@server:*"
+  --k3s-arg "--tls-san=*.nginx.lab.origemite.com@server:*"
 ```
 
 로컬 레지스트리를 먼저 만들고 Helm/Argo CD 이미지 연습용 클러스터에 붙인다.
