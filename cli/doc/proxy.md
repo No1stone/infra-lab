@@ -2,6 +2,28 @@
 
 Ubuntu 노트북이 AWS 프록시로 `ssh -R` reverse SSH를 연다. 프록시는 그 터널(`127.0.0.1:<remote-port>`)로 노트북에 접속하고, `*.lab.origemite.com` 트래픽을 노트북(k3d)으로 넘긴다. 클러스터는 Mac에서 띄우지 않는다.
 
+## Phase 7 서브존 DNS (`*.<controller>.lab.origemite.com`)
+
+Phase 7 비교 호스트는 `demo.<controller>.lab.origemite.com` (3레이블). 부모 `*.lab.origemite.com`은 한 레이블만 덮는다.
+
+Route53은 **실제 인프라·개인 존(`origemite.com`)** 이라 이 저장소·Terraform 밖에서만 관리한다. 변경 명령을 두지 않는다. destroy가 DNS에 영향 주면 안 된다. 이름 목록만 [`dns/inventory.yaml`](../../dns/inventory.yaml).
+
+| DNS 레코드 (존재 표기) | 대상 | 용도 |
+| --- | --- | --- |
+| `*.lab.origemite.com` | `<proxy-eip>` | 플랫폼 |
+| `*.<controller>.lab.origemite.com` | `<proxy-eip>` | Phase 7 |
+
+`<controller>`: `nginx`, `gateway`, `cilium`, `kong`, `traefik`, `istio`, `haproxy`.
+
+해석 확인(읽기)만.
+
+```bash
+dig +short demo.nginx.lab.origemite.com
+dig +short demo.<controller>.lab.origemite.com
+```
+
+DNS만으로 7개 MetalLB에 안 간다. 프록시 Host 분기 — [`cli/ops/proxy.md`](../ops/proxy.md), [`cli/ops/dns-subzone.md`](../ops/dns-subzone.md).
+
 ## Reverse SSH 터널 생성
 
 노트북에서 로컬 SSH(22)를 프록시 `<remote-port>`에 역방향 연결한다.
