@@ -1,0 +1,30 @@
+# GitOps 실습: demo-echo (ingress-compare)
+# Argo CD가 Git desired state ↔ 클러스터 live state를 비교한다.
+# drift 테스트: kubectl edit로 replicas/이미지를 바꾸면 OutOfSync → selfHeal이 Git으로 되돌린다.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-echo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    # GitHub: https://github.com/<org>/infra-lab.git
+    # Gitea:  https://git.origemite.com/<org>/infra-lab.git
+    repoURL: https://github.com/<org>/infra-lab.git
+    targetRevision: HEAD
+    path: k8s
+    directory:
+      include: "{namespace/ingress-compare.yaml,deployment/demo-echo.yaml,service/demo-echo.yaml}"
+      recurse: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-compare
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

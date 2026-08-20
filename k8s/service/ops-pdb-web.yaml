@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ops-pdb-web
+  namespace: ops-pdb
+spec:
+  type: ClusterIP
+  selector:
+    app: ops-pdb-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

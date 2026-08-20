@@ -63,9 +63,10 @@
 | 로그 검색 | OpenSearch (선택 Phase 5) | ES/Kibana 대체 |
 | UI | **Headlamp** | Lens 대체 |
 | 시크릿·데이터 | Vault, mysql, redis, kafka, rabbitmq | 1차 워크로드 |
-| CI | 계획: Gitea / Jenkins·GHA (개인 인프라, TF 밖) | GH Actions 문서 예 |
-| 점진 배포 | 계획: Argo Rollouts | — |
-| Teleport / Rook / Kubeflow | **이 클러스터 제외** | 문서엔 있으나 랩 RAM·범위 밖 |
+| CI / 점진배포 | Gitea·Jenkins(외부), **Argo Rollouts** ops | GH Actions 문서 예 |
+| 운영 | PDB / HPA / node-failure / chaos / **scenarios** | — |
+| 비교 | `doc/compare/` Gateway·CNI·Mesh | — |
+| Teleport / Rook / Kubeflow | **이 클러스터 제외** | 문서엔 있으나 랩 범위 밖 |
 
 ---
 

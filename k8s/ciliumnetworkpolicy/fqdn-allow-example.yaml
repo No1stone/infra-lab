@@ -1,0 +1,37 @@
+# FQDN egress 정책 예 — client Pod가 특정 외부 HTTPS만 허용.
+# 사전: Cilium DNS proxy / toFQDNs 지원 설정 필요. 클러스터 외부 egress가 막혀 있으면
+#       wget/curl 테스트 전에 default egress deny 정책과 함께 점진 적용.
+# 외부 DNS·443 필요 → 랩 Ubuntu 노트북에서만 검증. Mac 로컬 k3d는 스킵 가능.
+#
+# 적용 예:
+#   kubectl apply -f k8s/ciliumnetworkpolicy/fqdn-allow-example.yaml
+#   kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=5 https://kubernetes.io/  # 기대: 성공(정책·DNS OK 시)
+#   kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=5 https://example.com/   # 기대: 차단
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: fqdn-allow-example
+  namespace: cilium-policy
+spec:
+  endpointSelector:
+    matchLabels:
+      app: client
+  egress:
+    - toEndpoints:
+        # 클러스터 DNS (kube-dns / CoreDNS) — FQDN 정책 전제
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: kubernetes.io
+        - matchPattern: "*.kubernetes.io"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP

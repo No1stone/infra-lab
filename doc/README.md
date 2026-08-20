@@ -18,6 +18,57 @@ infra-lab 실습을 단계별로 따라 하는 **서술형 가이드**입니다.
 
 전체 트리: [`tree.md`](tree.md)
 
+## Compare · 비교 가이드
+
+기술 스택·진입점 **선택 비교** (서술). 실행 명령은 [`cli/ops/`](../cli/ops/)와 Phase 7 ops.
+
+| 경로 | 내용 |
+| --- | --- |
+| [compare/README.md](compare/README.md) | 비교 문서 목차 |
+| [compare/gateway-compare.md](compare/gateway-compare.md) | Ingress / Gateway API |
+| [compare/cni-compare.md](compare/cni-compare.md) | CNI |
+| [compare/service-mesh-compare.md](compare/service-mesh-compare.md) | Service mesh |
+| [14 Ingress 비교](14-ingress-compare.md) | Phase 7 튜토리얼 |
+| [`cli/ops/ingress-compare.md`](../cli/ops/ingress-compare.md) | 7종 Helm·curl 복붙 |
+
+## Ingress 비교 (Phase 7 실행)
+
+7개 게이트웨이·Ingress 컨트롤러를 **동일 echo 앱**으로 비교한다 — 위 compare·[`ingress-compare` ops](../cli/ops/ingress-compare.md) 참고.
+
+## 운영 시나리오
+
+End-to-end **운영·복구·배포** 연습 — Phase 여러 개를 엮는다.
+
+- [시나리오 목차](scenarios/README.md)
+- PDB·HPA·rollout·Cilium·mTLS·Ingress 전환 등 [`cli/ops/`](../cli/ops/)와 상호 링크
+
+| # | 시나리오 |
+| --- | --- |
+| 01 | [무중단 롤링 업데이트](scenarios/01-zero-downtime-update.md) |
+| 02 | [노드 업그레이드](scenarios/02-node-upgrade.md) |
+| 03 | [블루-그린](scenarios/03-blue-green.md) |
+| 04 | [카나리](scenarios/04-canary.md) |
+| 05 | [재해 복구](scenarios/05-disaster-recovery.md) |
+| 06 | [클러스터 업그레이드](scenarios/06-cluster-upgrade.md) |
+| 07 | [네트워크 장애](scenarios/07-network-failure.md) |
+| 08 | [인증서 갱신](scenarios/08-certificate-renewal.md) |
+| 09 | [Secret 로테이션](scenarios/09-secret-rotation.md) |
+| 10 | [게이트웨이 마이그레이션](scenarios/10-gateway-migration.md) |
+
+## cli/ops — 신규·연관
+
+| ops | 용도 |
+| --- | --- |
+| [`otel-trace-lab.md`](../cli/ops/otel-trace-lab.md) | OTLP → Collector → Tempo → Grafana |
+| [`chaos.md`](../cli/ops/chaos.md) | kubectl 장애 주입 |
+| [`node-failure.md`](../cli/ops/node-failure.md) | cordon·drain·agent down |
+| [`pdb.md`](../cli/ops/pdb.md) | PodDisruptionBudget |
+| [`hpa.md`](../cli/ops/hpa.md) | HPA + metrics-server |
+| [`argocd-gitops.md`](../cli/ops/argocd-gitops.md) | Auto Sync / Self Heal / Drift |
+| [`argo-rollouts.md`](../cli/ops/argo-rollouts.md) | Blue/Green · Canary |
+| [`gateway-api-features.md`](../cli/ops/gateway-api-features.md) | gRPC·JWT 등 기능 체크리스트 |
+| [`terraform.md`](../cli/ops/terraform.md) | **Experimental** k3d IaC |
+
 ## 목차
 
 | # | 챕터 | 상태 |

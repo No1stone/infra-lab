@@ -1,0 +1,25 @@
+# L7 HTTP 정책 초안 — echo(agnhost netexec)에 GET / 만 허용.
+# 사전: Cilium Helm에서 L7 proxy 활성 필요 (예: l7Proxy: true / enable-l7-proxy).
+#       default-deny-ingress + allow-client-to-echo(L4) 적용 후 이 정책으로 L7 테스트.
+# echo Pod는 containerPort 8080 (Service는 80→8080).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: l7-http-get-only
+  namespace: cilium-policy
+spec:
+  endpointSelector:
+    matchLabels:
+      app: echo
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: client
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+          rules:
+            http:
+              - method: GET
+                path: "/"

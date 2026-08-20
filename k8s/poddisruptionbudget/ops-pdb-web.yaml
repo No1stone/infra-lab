@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ops-pdb-web
+  namespace: ops-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: ops-pdb-web

@@ -36,26 +36,38 @@
 | 단계 | 내용 | 경로 |
 | --- | --- | --- |
 | 0 | k3d 클러스터 생성, 노드 라벨 | [`cli/ops/k3d.md`](cli/ops/k3d.md), [`cli/ops/kube.md`](cli/ops/kube.md) |
-| 0T | **Terraform** — k3d `lab` 부트스트랩 IaC (필수, 스텁→구현) | [`terraform/`](terraform/), [`cli/ops/terraform.md`](cli/ops/terraform.md) |
+| 0T | **Terraform** — k3d 부트스트랩 (**Experimental**→최소 구현) | [`terraform/`](terraform/), [`cli/ops/terraform.md`](cli/ops/terraform.md) |
 | 1 | MetalLB → ingress-nginx → cert-manager | [`helm/values/`](helm/values/), [`cli/ops/helm.md`](cli/ops/helm.md) |
 | 2 | 데이터 워크로드 (raw k8s) | [`k8s/`](k8s/) |
 | 3 | 관측: Prometheus/Grafana, Loki, Tempo, OTel, Fluent Bit | [`helm/values/`](helm/values/) |
-| 4 | GitOps·UI: Argo CD, Headlamp | [`helm/values/argocd.yaml`](helm/values/argocd.yaml), [`helm/values/headlamp.yaml`](helm/values/headlamp.yaml) |
+| 3T | **분산 트레이스 랩** (Gateway→앱→Redis/Kafka→Tempo) | [`cli/ops/otel-trace-lab.md`](cli/ops/otel-trace-lab.md) |
+| 4 | GitOps·UI: Argo CD, Headlamp | [`helm/values/argocd.yaml`](helm/values/argocd.yaml) |
+| 4G | **GitOps** — Application / Auto Sync / Self Heal / Drift | [`cli/ops/argocd-gitops.md`](cli/ops/argocd-gitops.md), [`argocd/application/`](argocd/application/) |
+| 4R | **Argo Rollouts** — Blue/Green·Canary | [`cli/ops/argo-rollouts.md`](cli/ops/argo-rollouts.md) |
 | 5 | (선택) OpenSearch | [`helm/values/opensearch.yaml`](helm/values/opensearch.yaml) |
-| 6A | Cilium (CNI) — NetworkPolicy / **파드간 권한** | [`cli/ops/cilium.md`](cli/ops/cilium.md), [`helm/values/cilium.yaml`](helm/values/cilium.yaml), [`k8s/ciliumnetworkpolicy/`](k8s/ciliumnetworkpolicy/) |
-| 6B | Istio + Kiali | [`cli/ops/istio.md`](cli/ops/istio.md), [`helm/values/istiod.yaml`](helm/values/istiod.yaml), [`helm/values/kiali.yaml`](helm/values/kiali.yaml) |
-| 6B-m | **mTLS** — Istio PeerAuthentication STRICT (east-west) | [`cli/ops/mtls.md`](cli/ops/mtls.md), [`k8s/peerauthentication/`](k8s/peerauthentication/) |
-| 6C | Harbor | [`cli/ops/harbor.md`](cli/ops/harbor.md), [`helm/values/harbor.yaml`](helm/values/harbor.yaml) |
-| 6D | **Keycloak** (필수) — OIDC / SSO | [`cli/ops/keycloak.md`](cli/ops/keycloak.md), [`helm/values/keycloak.yaml`](helm/values/keycloak.yaml) |
-| 7 | **진입점 비교** — 7 컨트롤러 동시 실습 | [`cli/ops/ingress-compare.md`](cli/ops/ingress-compare.md), [`k8s/gateway/`](k8s/gateway/) |
-| 이후 | Argo Application (GitOps sync), Keycloak→Argo/Kiali OIDC | `argocd/` |
-| 별도 | **Kubeflow (MLOps)** — 이 랩 k3d에 올리지 않음 | 별도 머신·클러스터 |
+| 6A | Cilium — NetworkPolicy·L7/DNS·Hubble | [`cli/ops/cilium.md`](cli/ops/cilium.md), [`k8s/ciliumnetworkpolicy/`](k8s/ciliumnetworkpolicy/) |
+| 6B | Istio + Kiali | [`cli/ops/istio.md`](cli/ops/istio.md) |
+| 6B-m | **mTLS** (Istio STRICT; 타 스택은 비교 문서) | [`cli/ops/mtls.md`](cli/ops/mtls.md), [`doc/compare/service-mesh-compare.md`](doc/compare/service-mesh-compare.md) |
+| 6C | Harbor | [`cli/ops/harbor.md`](cli/ops/harbor.md) |
+| 6D | **Keycloak** (필수) | [`cli/ops/keycloak.md`](cli/ops/keycloak.md) |
+| 7 | 진입점 비교 (Ingress/Gateway 7종) | [`cli/ops/ingress-compare.md`](cli/ops/ingress-compare.md) |
+| 7F | Gateway API **기능 체크리스트** (gRPC·JWT 등) | [`cli/ops/gateway-api-features.md`](cli/ops/gateway-api-features.md), [`doc/compare/gateway-compare.md`](doc/compare/gateway-compare.md) |
+| 8O | **운영** — PDB / HPA / Node failure | [`cli/ops/pdb.md`](cli/ops/pdb.md), [`cli/ops/hpa.md`](cli/ops/hpa.md), [`cli/ops/node-failure.md`](cli/ops/node-failure.md) |
+| 8C | **Chaos** — Pod/Node/Gateway/데이터/정책 장애 | [`cli/ops/chaos.md`](cli/ops/chaos.md) |
+| S | **운영 시나리오** (무중단·DR·인증서·게이트웨이 이전 등) | [`doc/scenarios/`](doc/scenarios/) |
+| C | **비교 문서** (Gateway / CNI / Mesh) | [`doc/compare/`](doc/compare/) |
+| 이후 | Keycloak→Argo/Kiali OIDC | `argocd/` |
+| 별도 | **Kubeflow** — 이 랩에 올리지 않음 | 별도 머신 |
 
-실습 도구 흐름: **Terraform(또는 k3d 수동) → Helm → kubectl → Argo CD**. Keycloak·mesh mTLS는 필수 실습.
+실습 흐름: **설치 → 운영(PDB/HPA/장애) → GitOps/점진배포 → 시나리오**. 비교 문서로 선택지를 정리한다.
 
-## 튜토리얼
+## 튜토리얼·운영 문서
 
-단계별 서술형 가이드: [`doc/README.md`](doc/README.md)
+| 경로 | 역할 |
+| --- | --- |
+| [`doc/README.md`](doc/README.md) | 설치·단계 튜토리얼 |
+| [`doc/scenarios/`](doc/scenarios/) | **운영 시나리오** (무중단·DR·인증서 등) |
+| [`doc/compare/`](doc/compare/) | Gateway / CNI / Mesh **비교** |
 
 **Kubeflow**는 모니터링이 아니라 ML 파이프라인용입니다. 메모리 부담이 커서 **infra-lab(Ubuntu k3d)과 리소스를 분리**하고, ML 전용 호스트/클러스터에 할당합니다.
 
