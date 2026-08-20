@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-traefik
+  namespace: ingress-compare
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: demo.traefik.lab.origemite.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: demo-echo
+                port:
+                  number: 80
