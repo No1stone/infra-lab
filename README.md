@@ -42,7 +42,7 @@
 | 3 | 관측: Prometheus/Grafana, Loki, Tempo, OTel, Fluent Bit | [`helm/values/`](helm/values/) |
 | 4 | GitOps·UI: Argo CD, Headlamp | [`helm/values/argocd.yaml`](helm/values/argocd.yaml), [`helm/values/headlamp.yaml`](helm/values/headlamp.yaml) |
 | 5 | (선택) OpenSearch | [`helm/values/opensearch.yaml`](helm/values/opensearch.yaml) |
-| 6A | Cilium (CNI) | [`cli/ops/cilium.md`](cli/ops/cilium.md), [`helm/values/cilium.yaml`](helm/values/cilium.yaml) |
+| 6A | Cilium (CNI) — NetworkPolicy / **파드간 권한** | [`cli/ops/cilium.md`](cli/ops/cilium.md), [`helm/values/cilium.yaml`](helm/values/cilium.yaml), [`k8s/ciliumnetworkpolicy/`](k8s/ciliumnetworkpolicy/) |
 | 6B | Istio + Kiali | [`cli/ops/istio.md`](cli/ops/istio.md), [`helm/values/istiod.yaml`](helm/values/istiod.yaml), [`helm/values/kiali.yaml`](helm/values/kiali.yaml) |
 | 6B-m | **mTLS** — Istio PeerAuthentication STRICT (east-west) | [`cli/ops/mtls.md`](cli/ops/mtls.md), [`k8s/peerauthentication/`](k8s/peerauthentication/) |
 | 6C | Harbor | [`cli/ops/harbor.md`](cli/ops/harbor.md), [`helm/values/harbor.yaml`](helm/values/harbor.yaml) |

@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-client-to-echo
+  namespace: cilium-policy
+spec:
+  endpointSelector:
+    matchLabels:
+      app: echo
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app: client
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "8080"
+              protocol: TCP

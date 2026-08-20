@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cilium-policy
+  labels:
+    lab.origemite.com/role: cilium-policy-demo
