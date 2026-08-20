@@ -857,7 +857,7 @@ terraform graph -type=plan -var-file=<tfvars파일>
 
 ## 랩 워크플로
 
-디렉터리를 초기화하고 포맷·검사·플랜·적용·출력을 이어서 한다.
+디렉터리를 초기화하고 포맷, 검사, 플랜, 적용, 출력을 이어서 한다.
 ```bash
 terraform -chdir=<디렉터리> init
 terraform -chdir=<디렉터리> fmt -recursive

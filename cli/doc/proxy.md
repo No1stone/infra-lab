@@ -2,7 +2,7 @@
 
 Ubuntu 노트북이 AWS 프록시로 `ssh -R` reverse SSH를 연다. 프록시는 그 터널(`127.0.0.1:<remote-port>`)로 노트북에 접속하고, **3뎁스** `*.<게이트웨이>.lab.origemite.com` 트래픽을 노트북(k3d)으로 넘긴다. 클러스터는 Mac에서 띄우지 않는다.
 
-## Phase 7·플랫폼 DNS (3뎁스)
+## Phase 7, 플랫폼 DNS (3뎁스)
 
 공개 호스트는 `<앱>.<게이트웨이>.lab.origemite.com`만. 2뎁스(`*.lab.origemite.com` 앱명)는 쓰지 않는다.
 
@@ -52,7 +52,7 @@ ssh -N -R <remote-port>:127.0.0.1:<local-port> <proxy-user>@<proxy-host>
 ssh -N -R <http-remote-port>:127.0.0.1:80 -R <https-remote-port>:127.0.0.1:443 <proxy-user>@<proxy-host>
 ```
 
-노트북에서 SSH·HTTP·HTTPS를 한 세션에서 함께 연다.
+노트북에서 SSH, HTTP, HTTPS를 한 세션에서 함께 연다.
 
 ```bash
 ssh -N -R <ssh-remote-port>:127.0.0.1:22 -R <http-remote-port>:127.0.0.1:80 -R <https-remote-port>:127.0.0.1:443 <proxy-user>@<proxy-host>
@@ -108,7 +108,7 @@ ssh -vN -R <remote-port>:127.0.0.1:<local-port> <proxy-user>@<proxy-host>
 autossh -M 0 -N -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R <remote-port>:127.0.0.1:<local-port> <proxy-user>@<proxy-host>
 ```
 
-노트북에서 autossh로 80·443을 함께 유지한다.
+노트북에서 autossh로 80, 443을 함께 유지한다.
 
 ```bash
 autossh -M 0 -N -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -R <http-remote-port>:127.0.0.1:80 -R <https-remote-port>:127.0.0.1:443 <proxy-user>@<proxy-host>
@@ -470,7 +470,7 @@ nginx 상태를 본다.
 systemctl status nginx --no-pager
 ```
 
-nginx가 활성·부팅등록인지 본다.
+nginx가 활성, 부팅등록인지 본다.
 
 ```bash
 systemctl is-active nginx && systemctl is-enabled nginx
@@ -488,14 +488,14 @@ HTTP에서 `*.nginx.lab.origemite.com`을 터널로 넘긴다.
 
 ```nginx
 server {
-    listen 80;
-    server_name *.nginx.lab.origemite.com;
-    location / {
-        proxy_pass http://127.0.0.1:<http-remote-port>;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+ listen 80;
+ server_name *.nginx.lab.origemite.com;
+ location / {
+ proxy_pass http://127.0.0.1:<http-remote-port>;
+ proxy_set_header Host $host;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto $scheme;
+ }
 }
 ```
 
@@ -503,10 +503,10 @@ HTTPS를 nginx가 종료하지 않고 TCP로 넘긴다.
 
 ```nginx
 stream {
-    server {
-        listen 443;
-        proxy_pass 127.0.0.1:<https-remote-port>;
-    }
+ server {
+ listen 443;
+ proxy_pass 127.0.0.1:<https-remote-port>;
+ }
 }
 ```
 
@@ -514,10 +514,10 @@ HTTP도 stream으로 넘긴다.
 
 ```nginx
 stream {
-    server {
-        listen 80;
-        proxy_pass 127.0.0.1:<http-remote-port>;
-    }
+ server {
+ listen 80;
+ proxy_pass 127.0.0.1:<http-remote-port>;
+ }
 }
 ```
 
@@ -929,13 +929,13 @@ ssh -O exit -o ControlPath='~/.ssh/cm-%r@%h:%p' <proxy-user>@<proxy-host>
 
 ## 빠른 진단
 
-프록시에서 터널·nginx·포트를 한 번에 본다.
+프록시에서 터널, nginx, 포트를 한 번에 본다.
 
 ```bash
 systemctl is-active ssh nginx; ss -tlnp | grep -E ':(22|80|443|<remote-port>)\b'; pgrep -af ssh
 ```
 
-노트북에서 터널·80/443을 한 번에 본다.
+노트북에서 터널, 80/443을 한 번에 본다.
 
 ```bash
 pgrep -af 'ssh .*-R|autossh'; ss -tlnp | grep -E ':(22|80|443)\b'

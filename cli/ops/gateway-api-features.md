@@ -34,7 +34,7 @@ kubectl get clusterissuer -A
 
 ### Envoy Gateway (`demo.gateway.lab…`, `.202`)
 
-| # | 항목 | 리소스·메모 | 상태 |
+| # | 항목 | 리소스, 메모 | 상태 |
 | --- | --- | --- | --- |
 | 1 | HTTPS | `Gateway` `tls.certificateRefs`, HTTPRoute `parentRefs` | 📋 |
 | 2 | gRPC | `GRPCRoute` → `demo-echo` grpc port | 📋 |
@@ -44,13 +44,13 @@ kubectl get clusterissuer -A
 | 6 | RateLimit | `BackendTrafficPolicy` (EG 버전 확인) | 📋 |
 | 7 | JWT | `SecurityPolicy` 또는 ext auth gRPC | 📋 |
 
-values: `helm/values/envoy-gateway.yaml` · demo: `k8s/gateway/demo-envoy.yaml`
+values: `helm/values/envoy-gateway.yaml`, demo: `k8s/gateway/demo-envoy.yaml`
 
 ---
 
 ### Cilium Gateway (`demo.cilium.lab…`, `.203`)
 
-| # | 항목 | 리소스·메모 | 상태 |
+| # | 항목 | 리소스, 메모 | 상태 |
 | --- | --- | --- | --- |
 | 1 | HTTPS | Gateway listener TLS + Secret | 📋 |
 | 2 | gRPC | GRPCRoute (Cilium 버전 호환 확인) | 📋 |
@@ -60,13 +60,13 @@ values: `helm/values/envoy-gateway.yaml` · demo: `k8s/gateway/demo-envoy.yaml`
 | 6 | RateLimit | Cilium/BPF rate limit 또는 Envoy layer | 📋 |
 | 7 | JWT | Gateway L7 policy 또는 외부 IdP | 📋 |
 
-values: `helm/values/cilium.yaml` (`gatewayAPI.enabled: true`) · demo: `k8s/gateway/demo-cilium.yaml`
+values: `helm/values/cilium.yaml` (`gatewayAPI.enabled: true`), demo: `k8s/gateway/demo-cilium.yaml`
 
 ---
 
 ### Istio Gateway (`demo.istio.lab…`, `.206`)
 
-| # | 항목 | 리소스·메모 | 상태 |
+| # | 항목 | 리소스, 메모 | 상태 |
 | --- | --- | --- | --- |
 | 1 | HTTPS | Gateway API TLS + 또는 `Gateway`/`VirtualService` | 📋 |
 | 2 | gRPC | GRPCRoute / VirtualService | 📋 |
@@ -74,7 +74,7 @@ values: `helm/values/cilium.yaml` (`gatewayAPI.enabled: true`) · demo: `k8s/gat
 | 4 | Rewrite | VirtualService `HTTPRewrite` | 📋 |
 | 5 | Header | VirtualService headers | 📋 |
 | 6 | RateLimit | EnvoyFilter / local rate limit | 📋 |
-| 7 | JWT | `RequestAuthentication` + `AuthorizationPolicy` · Keycloak 연동 📋 | 📋 |
+| 7 | JWT | `RequestAuthentication` + `AuthorizationPolicy`, Keycloak 연동 📋 | 📋 |
 
 mesh mTLS(east-west): [`mtls.md`](mtls.md) — 엣지 JWT와 별개.
 
@@ -82,7 +82,7 @@ mesh mTLS(east-west): [`mtls.md`](mtls.md) — 엣지 JWT와 별개.
 
 ### Kong (`demo.kong.lab…`, `.204`)
 
-| # | 항목 | Kong 리소스·플러그인 | 상태 |
+| # | 항목 | Kong 리소스, 플러그인 | 상태 |
 | --- | --- | --- | --- |
 | 1 | HTTPS | Ingress TLS secret / KongCertificate | 📋 |
 | 2 | gRPC | Ingress grpc-backend | 📋 |
@@ -90,7 +90,7 @@ mesh mTLS(east-west): [`mtls.md`](mtls.md) — 엣지 JWT와 별개.
 | 4 | Rewrite | request-transformer | 📋 |
 | 5 | Header | correlation-id, response-transformer | 📋 |
 | 6 | RateLimit | rate-limiting plugin | 📋 |
-| 7 | JWT | jwt / openid-connect plugin · Keycloak | 📋 |
+| 7 | JWT | jwt / openid-connect plugin, Keycloak | 📋 |
 
 ---
 
@@ -102,7 +102,7 @@ mesh mTLS(east-west): [`mtls.md`](mtls.md) — 엣지 JWT와 별개.
 
 ---
 
-### ingress-nginx (`.201`) · HAProxy (`.207`)
+### ingress-nginx (`.201`), HAProxy (`.207`)
 
 Ingress v1 annotations / CRD로 동일 7항목 📋. Gateway API 전환 시 Envoy/Cilium/NGINX GF 우선.
 

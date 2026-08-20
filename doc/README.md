@@ -6,11 +6,11 @@ infra-lab 실습을 단계별로 따라 하는 **서술형 가이드**입니다.
 
 | 경로 | 역할 |
 | --- | --- |
-| **`doc/`** (여기) | 튜토리얼 본문·캡처 참조. **서술·맥락** |
+| **`doc/`** (여기) | 튜토리얼 본문, 캡처 참조. **서술과 맥락** |
 | [`cli/doc/`](../cli/doc/) | 자주 쓰는 기본 명령 (`<자리표시자>`) |
 | [`cli/ops/`](../cli/ops/) | 클러스터 `lab` 기준 **복붙 실행** 명령 |
 | [`doc/images/`](images/) | 챕터별 스크린샷 (`doc/images/<phase>/`) |
-| [`doc/troubleshooting/`](troubleshooting/) | 공통·반복 에러 모음 |
+| [`doc/troubleshooting/`](troubleshooting/) | 공통, 반복 에러 모음 |
 
 - **캡처**: 각 챕터의 `images/<phase>/`에 PNG 등을 저장하고 본문에서 상대 경로로 참조한다.
 - **에러**: 챕터 표에 요약, 상세는 `troubleshooting/`에 추가한다.
@@ -18,9 +18,16 @@ infra-lab 실습을 단계별로 따라 하는 **서술형 가이드**입니다.
 
 전체 트리: [`tree.md`](tree.md)
 
-## Compare · 비교 가이드
+## 참고
 
-기술 스택·진입점 **선택 비교** (서술). 실행 명령은 [`cli/ops/`](../cli/ops/)와 Phase 7 ops.
+| 문서 | 내용 |
+| --- | --- |
+| [용어집 (플랫폼 컴포넌트)](glossary.md) | 역할, 대중적 비유, 랩 경로 |
+| [공식 문서 URL](official-docs.md) | 컴포넌트별 공식 docs 링크 |
+
+## 비교 가이드
+
+기술 스택, 진입점 **선택 비교** (서술). 실행 명령은 [`cli/ops/`](../cli/ops/)와 Phase 7 ops.
 
 | 경로 | 내용 |
 | --- | --- |
@@ -29,18 +36,18 @@ infra-lab 실습을 단계별로 따라 하는 **서술형 가이드**입니다.
 | [compare/cni-compare.md](compare/cni-compare.md) | CNI |
 | [compare/service-mesh-compare.md](compare/service-mesh-compare.md) | Service mesh |
 | [14 Ingress 비교](14-ingress-compare.md) | Phase 7 튜토리얼 |
-| [`cli/ops/ingress-compare.md`](../cli/ops/ingress-compare.md) | 7종 Helm·curl 복붙 |
+| [`cli/ops/ingress-compare.md`](../cli/ops/ingress-compare.md) | 7종 Helm, curl 복붙 |
 
 ## Ingress 비교 (Phase 7 실행)
 
-7개 게이트웨이·Ingress 컨트롤러를 **동일 echo 앱**으로 비교한다 — 위 compare·[`ingress-compare` ops](../cli/ops/ingress-compare.md) 참고.
+7개 게이트웨이, Ingress 컨트롤러를 **동일 echo 앱**으로 비교한다 — 위 compare, [`ingress-compare` ops](../cli/ops/ingress-compare.md) 참고.
 
 ## 운영 시나리오
 
-End-to-end **운영·복구·배포** 연습 — Phase 여러 개를 엮는다.
+End-to-end **운영, 복구, 배포** 연습 — Phase 여러 개를 엮는다.
 
 - [시나리오 목차](scenarios/README.md)
-- PDB·HPA·rollout·Cilium·mTLS·Ingress 전환 등 [`cli/ops/`](../cli/ops/)와 상호 링크
+- PDB, HPA, rollout, Cilium, mTLS, Ingress 전환 등 [`cli/ops/`](../cli/ops/)와 상호 링크
 
 | # | 시나리오 |
 | --- | --- |
@@ -55,18 +62,18 @@ End-to-end **운영·복구·배포** 연습 — Phase 여러 개를 엮는다.
 | 09 | [Secret 로테이션](scenarios/09-secret-rotation.md) |
 | 10 | [게이트웨이 마이그레이션](scenarios/10-gateway-migration.md) |
 
-## cli/ops — 신규·연관
+## cli/ops — 신규, 연관
 
 | ops | 용도 |
 | --- | --- |
 | [`otel-trace-lab.md`](../cli/ops/otel-trace-lab.md) | OTLP → Collector → Tempo → Grafana |
 | [`chaos.md`](../cli/ops/chaos.md) | kubectl 장애 주입 |
-| [`node-failure.md`](../cli/ops/node-failure.md) | cordon·drain·agent down |
+| [`node-failure.md`](../cli/ops/node-failure.md) | cordon, drain, agent down |
 | [`pdb.md`](../cli/ops/pdb.md) | PodDisruptionBudget |
 | [`hpa.md`](../cli/ops/hpa.md) | HPA + metrics-server |
 | [`argocd-gitops.md`](../cli/ops/argocd-gitops.md) | Auto Sync / Self Heal / Drift |
-| [`argo-rollouts.md`](../cli/ops/argo-rollouts.md) | Blue/Green · Canary |
-| [`gateway-api-features.md`](../cli/ops/gateway-api-features.md) | gRPC·JWT 등 기능 체크리스트 |
+| [`argo-rollouts.md`](../cli/ops/argo-rollouts.md) | Blue/Green, Canary |
+| [`gateway-api-features.md`](../cli/ops/gateway-api-features.md) | gRPC, JWT 등 기능 체크리스트 |
 | [`terraform.md`](../cli/ops/terraform.md) | **Experimental** k3d IaC |
 
 ## 목차
@@ -77,19 +84,19 @@ End-to-end **운영·복구·배포** 연습 — Phase 여러 개를 엮는다.
 | 01 | [프록시와 DNS](01-proxy-and-dns.md) | 초안 |
 | 02 | [k3d 클러스터](02-k3d-cluster.md) | 초안 |
 | 03 | [Terraform](03-terraform.md) | 초안 |
-| 04 | [MetalLB·Ingress·인증서](04-metallb-ingress-cert.md) | 초안 |
+| 04 | [MetalLB, Ingress, 인증서](04-metallb-ingress-cert.md) | 초안 |
 | 05 | [데이터 워크로드](05-data-workloads.md) | 초안 |
 | 06 | [관측](06-observability.md) | 초안 |
-| 07 | [Argo CD·Headlamp](07-argocd-headlamp.md) | 초안 |
+| 07 | [Argo CD, Headlamp](07-argocd-headlamp.md) | 초안 |
 | 08 | [OpenSearch (선택)](08-opensearch.md) | 초안 |
 | 09 | [Cilium](09-cilium.md) | 초안 |
-| 10 | [Istio·Kiali](10-istio-kiali.md) | 초안 |
+| 10 | [Istio, Kiali](10-istio-kiali.md) | 초안 |
 | 11 | [mTLS](11-mtls.md) | 초안 |
 | 12 | [Harbor](12-harbor.md) | 초안 |
 | 13 | [Keycloak](13-keycloak.md) | 초안 |
 | 14 | [Ingress 비교](14-ingress-compare.md) | 초안 |
-| 15 | [GitOps·OIDC](15-gitops-oidc.md) | 초안 |
-| 90 | [파괴·리셋](90-destroy-and-reset.md) | 초안 |
+| 15 | [GitOps, OIDC](15-gitops-oidc.md) | 초안 |
+| 90 | [파괴, 리셋](90-destroy-and-reset.md) | 초안 |
 
 ## 트러블슈팅
 

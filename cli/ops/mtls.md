@@ -47,19 +47,19 @@ kubectl apply -f - <<'EOF'
 apiVersion: security.istio.io/v1
 kind: PeerAuthentication
 metadata:
-  name: default
-  namespace: ingress-compare
+ name: default
+ namespace: ingress-compare
 spec:
-  mtls:
-    mode: STRICT
+ mtls:
+ mode: STRICT
 EOF
 ```
 
-mesh 전체 STRICT는 `istio-system`에 동일 kind·`mode: STRICT`로 `metadata.namespace: istio-system` — `k8s/peerauthentication/istio-mtls.yaml` 주석 참고.
+mesh 전체 STRICT는 `istio-system`에 동일 kind, `mode: STRICT`로 `metadata.namespace: istio-system` — `k8s/peerauthentication/istio-mtls.yaml` 주석 참고.
 
 ## DestinationRule (선택)
 
-기본 mesh mTLS는 istiod·PeerAuthentication으로 충분한 경우가 많다. 특정 서비스 subset·TLS mode를 명시할 때만 `DestinationRule`의 `trafficPolicy.tls.mode: ISTIO_MUTUAL`을 추가한다.
+기본 mesh mTLS는 istiod, PeerAuthentication으로 충분한 경우가 많다. 특정 서비스 subset, TLS mode를 명시할 때만 `DestinationRule`의 `trafficPolicy.tls.mode: ISTIO_MUTUAL`을 추가한다.
 
 ## 검증
 

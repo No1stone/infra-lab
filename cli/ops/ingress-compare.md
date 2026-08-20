@@ -2,7 +2,7 @@
 
 Phase 7 — **7개 진입점 컨트롤러를 한 번에** 올리고 `demo-echo`로 비교한다.
 
-매니페스트·values는 이미 모두 있다. 아래를 순서대로 실행하면 된다.
+매니페스트, values는 이미 모두 있다. 아래를 순서대로 실행하면 된다.
 
 | # | 컨트롤러 | values | demo | MetalLB |
 | --- | --- | --- | --- | --- |
@@ -44,32 +44,32 @@ helm repo update
 
 ```bash
 helm upgrade --install nginx ingress-nginx/ingress-nginx \
-  -n nginx --create-namespace \
-  -f helm/values/nginx.yaml --wait --timeout 10m
+ -n nginx --create-namespace \
+ -f helm/values/nginx.yaml --wait --timeout 10m
 
 helm upgrade --install eg oci://docker.io/envoyproxy/gateway-helm \
-  -n envoy-gateway-system --create-namespace \
-  -f helm/values/envoy-gateway.yaml --wait --timeout 10m
+ -n envoy-gateway-system --create-namespace \
+ -f helm/values/envoy-gateway.yaml --wait --timeout 10m
 
 helm upgrade cilium cilium/cilium \
-  -n kube-system \
-  -f helm/values/cilium.yaml --wait --timeout 10m
+ -n kube-system \
+ -f helm/values/cilium.yaml --wait --timeout 10m
 
 helm upgrade --install kong kong/kong \
-  -n kong --create-namespace \
-  -f helm/values/kong.yaml --wait --timeout 10m
+ -n kong --create-namespace \
+ -f helm/values/kong.yaml --wait --timeout 10m
 
 helm upgrade --install traefik traefik/traefik \
-  -n traefik --create-namespace \
-  -f helm/values/traefik.yaml --wait --timeout 10m
+ -n traefik --create-namespace \
+ -f helm/values/traefik.yaml --wait --timeout 10m
 
 helm upgrade --install istio-gateway istio/gateway \
-  -n istio-system \
-  -f helm/values/istio-gateway.yaml --wait --timeout 10m
+ -n istio-system \
+ -f helm/values/istio-gateway.yaml --wait --timeout 10m
 
 helm upgrade --install haproxy-ingress haproxytech/kubernetes-ingress \
-  -n haproxy-ingress --create-namespace \
-  -f helm/values/haproxy-ingress.yaml --wait --timeout 10m
+ -n haproxy-ingress --create-namespace \
+ -f helm/values/haproxy-ingress.yaml --wait --timeout 10m
 ```
 
 ## 4) 데모 앱 + Ingress/Gateway 7종
@@ -91,8 +91,8 @@ Envoy/Cilium Gateway가 만든 LB Service IP가 비면 MetalLB로 고정.
 
 ```bash
 kubectl -n ingress-compare annotate svc --overwrite \
-  -l gateway.envoyproxy.io/owning-gateway-name=demo-envoy \
-  metallb.universe.tf/loadBalancerIPs=172.18.255.202 2>/dev/null || true
+ -l gateway.envoyproxy.io/owning-gateway-name=demo-envoy \
+ metallb.universe.tf/loadBalancerIPs=172.18.255.202 2>/dev/null || true
 
 kubectl get svc -A -o wide | grep -E 'LoadBalancer|172\.18\.255\.20'
 ```
@@ -113,6 +113,6 @@ curl -sS -H 'Host: demo.haproxy.lab.origemite.com' http://172.18.255.207/
 
 ## 관련
 
-- values·개별 helm: [`helm.md`](helm.md) Phase 7
+- values, 개별 helm: [`helm.md`](helm.md) Phase 7
 - 프록시 Host: [`proxy.md`](proxy.md)
 - DNS 이름: [`dns/inventory.yaml`](../../dns/inventory.yaml)

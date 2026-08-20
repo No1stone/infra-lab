@@ -19,7 +19,7 @@ kubectl get nodes -L lab.origemite.com/workload
 kubectl apply -f k8s/namespace/
 ```
 
-ConfigMap 적용 (MetalLB IP 풀·ClusterIssuer·워크로드 설정)
+ConfigMap 적용 (MetalLB IP 풀, ClusterIssuer, 워크로드 설정)
 ```bash
 kubectl apply -f k8s/configmap/
 ```
@@ -33,7 +33,7 @@ kubectl apply -f k8s/node/rabbitmq/labels.yaml
 kubectl apply -f k8s/node/vault/labels.yaml
 ```
 
-Deployment·Service·Ingress 적용
+Deployment, Service, Ingress 적용
 ```bash
 kubectl apply -f k8s/deployment/
 kubectl apply -f k8s/service/

@@ -1,4 +1,4 @@
-# 04 MetalLB·Ingress·인증서
+# 04 MetalLB, Ingress, 인증서
 
 ## 목표
 -
@@ -12,7 +12,7 @@
 ## 캡처
 <!-- ![설명](images/04-metallb-ingress-cert/xxx.png) -->
 
-## 에러·트러블슈팅
+## 에러, 트러블슈팅
 | 증상 | 원인 | 조치 |
 | --- | --- | --- |
 | | | |

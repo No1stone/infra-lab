@@ -2,7 +2,7 @@
 
 ## 목표
 
-신규 버전에 **일부 트래픽만** 보내 오류·latency를 관측한 뒤 비율을 늘리거나 롤백한다. nginx canary annotation, Istio VirtualService, (계획) Argo Rollouts 중 하나를 랩에서 비교한다.
+신규 버전에 **일부 트래픽만** 보내 오류, latency를 관측한 뒤 비율을 늘리거나 롤백한다. nginx canary annotation, Istio VirtualService, (계획) Argo Rollouts 중 하나를 랩에서 비교한다.
 
 ## 사전조건
 
@@ -16,12 +16,12 @@
 
 1. `demo-echo`(stable) + `demo-echo-canary`(1 replica) 배포
 2. Ingress `demo-nginx`에 canary annotation — weight 10%
-   ```bash
-   kubectl -n ingress-compare annotate ingress demo-nginx \
-     nginx.ingress.kubernetes.io/canary=true \
-     nginx.ingress.kubernetes.io/canary-weight=10 \
-     --overwrite
-   ```
+ ```bash
+ kubectl -n ingress-compare annotate ingress demo-nginx \
+ nginx.ingress.kubernetes.io/canary=true \
+ nginx.ingress.kubernetes.io/canary-weight=10 \
+ --overwrite
+ ```
 3. canary 전용 Ingress 또는 secondary service backend 연결 (chart/nginx 버전에 맞게 매니페스트 조정)
 4. 다수 curl — 응답 본문 비율로 90/10 근사 확인
 

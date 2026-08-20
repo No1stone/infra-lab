@@ -1,7 +1,9 @@
 # infra-lab 참고 자료
 
-`ref/` — 홈랩 실습과 맞닿은 **외부 참고**와, 이 저장소 기준 **현재 스택 대조**를 둔다.  
-실습 절차·복붙 명령은 [`doc/`](../doc/README.md)·[`cli/ops/`](../cli/ops/)를 본다.
+`ref/` — 홈랩 실습과 맞닿은 **외부 참고**와, 이 저장소 기준 **현재 스택 대조**를 둔다. 
+- 용어, 클라우드 비유: [`doc/glossary.md`](../doc/glossary.md)
+- 공식 문서 URL: [`doc/official-docs.md`](../doc/official-docs.md)
+- 실습 절차, 복붙 명령은 [`doc/`](../doc/README.md), [`cli/ops/`](../cli/ops/)를 본다.
 
 ---
 
@@ -12,7 +14,7 @@
 | 런타임 | Ubuntu 노트북 **k3d** `lab` (Mac에서 클러스터 기동 안 함) |
 | 공개 입구 | AWS 프록시 → reverse SSH → MetalLB `.201`–`.207` |
 | DNS | **3뎁스만** `<앱>.<게이트웨이>.lab.origemite.com` (2뎁스 금지) |
-| Route53 | `origemite.com` **개인용·외부 관리**. 이 저장소/TF로 변경·destroy 안 함. 이름만 [`dns/inventory.yaml`](../dns/inventory.yaml) |
+| Route53 | `origemite.com` **개인용, 외부 관리**. 이 저장소/TF로 변경, destroy 안 함. 이름만 [`dns/inventory.yaml`](../dns/inventory.yaml) |
 | 필수 실습 | Terraform(스텁→구현), Keycloak, Istio mTLS, Cilium NetworkPolicy |
 | 제외 | Kubeflow(별도 머신), Rook, Teleport, Route53/Gitea/Jenkins를 TF로 관리 |
 
@@ -20,7 +22,7 @@
 
 ## 2026년 쿠버네티스 표준 아키텍처
 
-「쿠버네티스 인프라 구축·운영 노하우 3/e」(_Book_k8sInfra) **2026년판**.
+「쿠버네티스 인프라 구축/운영 노하우 3/e」(_Book_k8sInfra) **2026년판**.
 
 | 구분 | 링크 |
 | --- | --- |
@@ -31,49 +33,49 @@
 
 ### 왜 보는가
 
-- CNCF Graduated·Landscape 기준으로 컴포넌트를 고르는 배경
+- CNCF Graduated, Landscape 기준으로 컴포넌트를 고르는 배경
 - **2026**: OCI 확대, **Ingress NGINX EOL** → Gateway API 전환 압력
-- 랩 스택(Terraform · Helm · Argo CD · Cilium · Istio · Keycloak · Harbor)과 de facto 표준 대조
+- 랩 스택(Terraform, Helm, Argo CD, Cilium, Istio, Keycloak, Harbor)과 de facto 표준 대조
 
 ### 문서 핵심 요약
 
 - 검증된 오픈소스(CNCF) 위주
 - Ingress NGINX: 2026-03 이후 EOL 방향 → 프로덕션은 Gateway API 권장. 랩은 **학습용 nginx 유지 + Phase 7에서 Gateway/타 컨트롤러 비교**
-- 권장 예: Cilium/Calico, MetalLB, Helm, Headlamp, Istio, Argo CD, Harbor, Keycloak, Prometheus/Grafana, OpenSearch, Tempo, Vault, cert-manager, (문서 예) Teleport·HAProxy·GitHub Actions
+- 권장 예: Cilium/Calico, MetalLB, Helm, Headlamp, Istio, Argo CD, Harbor, Keycloak, Prometheus/Grafana, OpenSearch, Tempo, Vault, cert-manager, (문서 예) Teleport, HAProxy, GitHub Actions
 - 배포: **Helm + Argo CD**
 
 ---
 
 ## infra-lab ↔ 표준 문서 대조
 
-| 컴포넌트 | infra-lab 상태 | 표준·메모 |
+| 컴포넌트 | infra-lab 상태 | 표준, 메모 |
 | --- | --- | --- |
 | IaC | **Terraform** Phase 0T (스텁→`envs/` 분리 예정). Route53 제외 | 클러스터 부트스트랩 |
 | CNI | **Cilium** + Hubble + **CiliumNetworkPolicy** (파드간 권한) | Calico/Cilium |
 | 외부 LB | **MetalLB** `.201`–`.207` (입구 IP ≈ 클라우드 NLB 자리) | MetalLB |
 | 플랫폼 Ingress | **ingress-nginx** (기본). 호스트 `*.nginx.lab…` | EOL → Gateway API |
 | Gateway API | Phase 7: **Envoy / Cilium / Istio** Gateway | 2026 전환 축 |
-| Ingress 비교 | Kong, Traefik, HAProxy (+ nginx) | 학습·비교 |
+| Ingress 비교 | Kong, Traefik, HAProxy (+ nginx) | 학습, 비교 |
 | GitOps | **Argo CD** (+ Application은 이후) | de facto |
 | 패키징 | **Helm** values under `helm/values/` | de facto |
 | IAM | **Keycloak** (필수) | 문서 권장 |
-| 메시·mTLS | **Istio** + Kiali + PeerAuthentication STRICT | 문서 권장 |
+| 메시, mTLS | **Istio** + Kiali + PeerAuthentication STRICT | 문서 권장 |
 | 레지스트리 | **Harbor** (≈ ECR 역할) | 문서 권장 |
 | 관측 | kube-prometheus-stack, Loki, Fluent Bit, **Tempo**, OTel | Zipkin→Tempo, ES→OpenSearch |
 | 로그 검색 | OpenSearch (선택 Phase 5) | ES/Kibana 대체 |
 | UI | **Headlamp** | Lens 대체 |
-| 시크릿·데이터 | Vault, mysql, redis, kafka, rabbitmq | 1차 워크로드 |
-| CI / 점진배포 | Gitea·Jenkins(외부), **Argo Rollouts** ops | GH Actions 문서 예 |
+| 시크릿, 데이터 | Vault, mysql, redis, kafka, rabbitmq | 1차 워크로드 |
+| CI / 점진배포 | Gitea, Jenkins(외부), **Argo Rollouts** ops | GH Actions 문서 예 |
 | 운영 | PDB / HPA / node-failure / chaos / **scenarios** | — |
-| 비교 | `doc/compare/` Gateway·CNI·Mesh | — |
+| 비교 | `doc/compare/` Gateway, CNI, Mesh | — |
 | Teleport / Rook / Kubeflow | **이 클러스터 제외** | 문서엔 있으나 랩 범위 밖 |
 
 ---
 
-## 진입·DNS·라우팅 (랩 규칙)
+## 진입, DNS, 라우팅 (랩 규칙)
 
 ```text
-DNS 3뎁스  →  MetalLB(게이트웨이별 IP)  →  Ingress|Gateway 리소스(Host)  →  Service DNS → Pod
+DNS 3뎁스 → MetalLB(게이트웨이별 IP) → Ingress|Gateway 리소스(Host) → Service DNS → Pod
 ```
 
 - 한 요청은 **고른 게이트웨이 하나**만 탐 (7개 동시 팬아웃 아님)
@@ -111,9 +113,9 @@ DNS 3뎁스  →  MetalLB(게이트웨이별 IP)  →  Ingress|Gateway 리소스
 
 ---
 
-## 저작·크레딧
+## 저작, 크레딧
 
-「쿠버네티스 인프라 구축·운영 노하우 3/e」(_Book_k8sInfra)
+「쿠버네티스 인프라 구축/운영 노하우 3/e」(_Book_k8sInfra)
 
 | 이름 | GitHub |
 | --- | --- |

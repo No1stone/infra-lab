@@ -11,7 +11,7 @@ cat terraform/README.md
 ls -la terraform/envs/lab/
 ```
 
-클러스터 생성 — [`k3d.md`](k3d.md) Cilium·MetalLB용 create 블록.
+클러스터 생성 — [`k3d.md`](k3d.md) Cilium, MetalLB용 create 블록.
 
 ## 계획 리소스 (`terraform/envs/lab`)
 
@@ -24,7 +24,7 @@ ls -la terraform/envs/lab/
 | 5 | k3s disable | traefik, servicelb, network-policy (Cilium 경로) |
 | 6 | node labels | `lab.origemite.com/workload=*` — `k8s/node/*/labels.yaml` |
 | 7 | kubeconfig | merge + context `k3d-lab` |
-| 8 | (범위 밖) | Helm·MetalLB·cert-manager — Terraform 미포함 |
+| 8 | (범위 밖) | Helm, MetalLB, cert-manager — Terraform 미포함 |
 
 구현 방식 후보: `null_resource` + `local-exec`로 `k3d cluster create …` 래핑. provider는 **k3d 공식 TF provider 검토 전** local/null만.
 
@@ -37,7 +37,7 @@ terraform -chdir=terraform/envs/lab apply
 terraform -chdir=terraform/envs/lab destroy
 ```
 
-destroy는 k3d 클러스터만 삭제 — **Route53·origemite.com DNS 무영향**.
+destroy는 k3d 클러스터만 삭제 — **Route53, origemite.com DNS 무영향**.
 
 ## 관련
 

@@ -1,25 +1,25 @@
 # cilium ops
 
-Cilium은 k3s 기본 CNI·NetworkPolicy 대신 쓴다. **클러스터 생성 시** `--disable-network-policy`가 필요하므로 lab를 삭제·재생성한 뒤 설치한다.
+Cilium은 k3s 기본 CNI, NetworkPolicy 대신 쓴다. **클러스터 생성 시** `--disable-network-policy`가 필요하므로 lab를 삭제, 재생성한 뒤 설치한다.
 
 k3d mount 이슈 회피 (Ubuntu 노트북에서 cilium 설치 전)
 ```bash
 export K3D_FIX_MOUNTS=1
 ```
 
-lab 클러스터 삭제·재생성 — k3d ops의 Cilium용 create 블록 사용
+lab 클러스터 삭제, 재생성 — k3d ops의 Cilium용 create 블록 사용
 ```bash
 k3d cluster delete lab
 k3d cluster create lab \
-  --servers 1 \
-  --agents 5 \
-  --port 80:80@loadbalancer \
-  --port 443:443@loadbalancer \
-  --k3s-arg "--disable=traefik@server:*" \
-  --k3s-arg "--disable=servicelb@server:*" \
-  --k3s-arg "--disable-network-policy@server:*" \
-  --wait \
-  --timeout 120s
+ --servers 1 \
+ --agents 5 \
+ --port 80:80@loadbalancer \
+ --port 443:443@loadbalancer \
+ --k3s-arg "--disable=traefik@server:*" \
+ --k3s-arg "--disable=servicelb@server:*" \
+ --k3s-arg "--disable-network-policy@server:*" \
+ --wait \
+ --timeout 120s
 k3d kubeconfig merge lab --kubeconfig-merge-default --kubeconfig-switch-context
 ```
 
@@ -28,10 +28,10 @@ Cilium Helm 설치 (kube-system)
 helm repo add cilium https://helm.cilium.io/
 helm repo update
 helm upgrade --install cilium cilium/cilium \
-  -n kube-system \
-  -f helm/values/cilium.yaml \
-  --wait \
-  --timeout 10m
+ -n kube-system \
+ -f helm/values/cilium.yaml \
+ --wait \
+ --timeout 10m
 ```
 
 Cilium 상태 확인 (CLI 설치된 경우)
@@ -42,7 +42,7 @@ cilium connectivity test
 
 ## Hubble UI
 
-`helm/values/cilium.yaml`에서 Hubble relay·UI 활성. 포트 포워드 후 브라우저에서 흐름 확인.
+`helm/values/cilium.yaml`에서 Hubble relay, UI 활성. 포트 포워드 후 브라우저에서 흐름 확인.
 
 ```bash
 kubectl -n kube-system port-forward svc/hubble-ui 12000:80
@@ -59,7 +59,7 @@ hubble observe --verdict Dropped --namespace cilium-policy
 
 ## 파드간 권한 데모 (CiliumNetworkPolicy)
 
-네임스페이스·워크로드·서비스 적용:
+네임스페이스, 워크로드, 서비스 적용:
 
 ```bash
 kubectl apply -f k8s/namespace/cilium-policy.yaml
@@ -100,21 +100,21 @@ kubectl delete -f k8s/ciliumnetworkpolicy/default-deny-ingress.yaml
 
 ## L3/L4 정책 복습
 
-`CiliumNetworkPolicy`는 **선택된 Pod(endpointSelector)** 에 ingress/egress 규칙을 붙인다. Kubernetes `NetworkPolicy`와 문법이 비슷하지만 Cilium 확장(L7·FQDN)을 쓸 수 있다.
+`CiliumNetworkPolicy`는 **선택된 Pod(endpointSelector)** 에 ingress/egress 규칙을 붙인다. Kubernetes `NetworkPolicy`와 문법이 비슷하지만 Cilium 확장(L7, FQDN)을 쓸 수 있다.
 
 | 단계 | 파일 | 동작 |
 | --- | --- | --- |
 | 1 | (정책 없음) | NS 내 기본 allow — client → echo OK |
 | 2 | `default-deny-ingress.yaml` | `ingress: []` — echo 포함 NS 전체 ingress 차단 |
-| 3 | `allow-client-to-echo.yaml` | `app:client` → `app:echo` TCP 80·8080만 허용 |
+| 3 | `allow-client-to-echo.yaml` | `app:client` → `app:echo` TCP 80, 8080만 허용 |
 
 L3/L4만 볼 때 핵심 필드:
 
 - `endpointSelector` — 정책이 적용되는 **대상 Pod** (예: echo)
 - `ingress[].fromEndpoints` — **누가** 접속 가능한지 (예: client)
-- `toPorts[].ports` — **어떤 포트·프로토콜** (Pod containerPort 기준 8080)
+- `toPorts[].ports` — **어떤 포트, 프로토콜** (Pod containerPort 기준 8080)
 
-정책 목록·요약:
+정책 목록, 요약:
 
 ```bash
 kubectl -n cilium-policy get ciliumnetworkpolicies
@@ -147,7 +147,7 @@ kubectl delete -f k8s/ciliumnetworkpolicy/l7-http-get-only.yaml
 
 ## DNS / FQDN egress 정책
 
-외부 HTTPS를 **FQDN 화이트리스트**로만 허용하는 예. DNS proxy·`toFQDNs` 지원이 Cilium values에 켜져 있어야 한다.
+외부 HTTPS를 **FQDN 화이트리스트**로만 허용하는 예. DNS proxy, `toFQDNs` 지원이 Cilium values에 켜져 있어야 한다.
 
 ```bash
 kubectl apply -f k8s/ciliumnetworkpolicy/fqdn-allow-example.yaml
@@ -155,7 +155,7 @@ kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=5 https://kub
 kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=5 https://example.com/ || true
 ```
 
-기대(정책·외부 egress OK 시): `kubernetes.io` 허용, `example.com` 차단. 클러스터가 외부망 없으면 스킵.
+기대(정책, 외부 egress OK 시): `kubernetes.io` 허용, `example.com` 차단. 클러스터가 외부망 없으면 스킵.
 
 제거:
 
@@ -188,7 +188,7 @@ hubble observe --namespace cilium-policy --verdict DROPPED
 hubble observe --namespace cilium-policy --from-pod client --verdict DROPPED
 ```
 
-L7 HTTP( L7 proxy·Hubble L7 ON 시):
+L7 HTTP( L7 proxy, Hubble L7 ON 시):
 
 ```bash
 hubble observe --namespace cilium-policy --protocol http

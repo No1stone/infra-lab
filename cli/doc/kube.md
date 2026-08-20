@@ -4,7 +4,7 @@ k3d 실습용 기본 kubectl 명령. Secret은 이름만 조회한다.
 
 ## 클러스터 정보
 
-클라이언트·서버 버전 확인
+클라이언트, 서버 버전 확인
 
 ```bash
 kubectl version
@@ -22,7 +22,7 @@ kubectl version --client
 kubectl version -o yaml
 ```
 
-컨트롤 플레인·클러스터 서비스 주소
+컨트롤 플레인, 클러스터 서비스 주소
 
 ```bash
 kubectl cluster-info
@@ -262,7 +262,7 @@ kubectl get pods
 kubectl get pods -n <네임스페이스>
 ```
 
-파드 상세 컬럼 (노드·IP)
+파드 상세 컬럼 (노드, IP)
 
 ```bash
 kubectl get pods -o wide
@@ -780,7 +780,7 @@ Kustomize로 삭제
 kubectl delete -k <디렉터리>
 ```
 
-리소스 종류·이름으로 삭제
+리소스 종류, 이름으로 삭제
 
 ```bash
 kubectl delete pod <파드명> -n <네임스페이스>

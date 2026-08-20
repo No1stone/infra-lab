@@ -1,9 +1,9 @@
 # dns-subzone ops
 
-랩 공개 호스트는 **3뎁스만**: `<앱>.<게이트웨이>.lab.origemite.com`.  
+랩 공개 호스트는 **3뎁스만**: `<앱>.<게이트웨이>.lab.origemite.com`. 
 2뎁스(`rabbitmq.lab.origemite.com` 등)는 쓰지 않는다.
 
-`origemite.com`은 개인용 — Route53 변경·destroy 영향 없음. 이름만 [`dns/inventory.yaml`](../../dns/inventory.yaml).
+`origemite.com`은 개인용 — Route53 변경, destroy 영향 없음. 이름만 [`dns/inventory.yaml`](../../dns/inventory.yaml).
 
 ## inventory
 

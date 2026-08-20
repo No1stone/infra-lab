@@ -13,20 +13,20 @@
 ## 절차
 
 1. **blue 배포** — 기존 `demo-echo` (label `version=blue`로 patch)
-   ```bash
-   kubectl -n ingress-compare label deployment demo-echo version=blue --overwrite
-   kubectl -n ingress-compare patch deployment demo-echo -p '{"spec":{"template":{"metadata":{"labels":{"version":"blue"}}}}}'
-   ```
+ ```bash
+ kubectl -n ingress-compare label deployment demo-echo version=blue --overwrite
+ kubectl -n ingress-compare patch deployment demo-echo -p '{"spec":{"template":{"metadata":{"labels":{"version":"blue"}}}}}'
+ ```
 2. **green Deployment 복제** — `demo-echo-green`, image/tag 또는 env만 변경, label `version=green`
-   ```bash
-   kubectl -n ingress-compare get deployment demo-echo -o yaml | \
-     sed 's/name: demo-echo/name: demo-echo-green/;s/version: blue/version: green/' | \
-     kubectl apply -f -
-   ```
-   (실습에서는 `kubectl create deployment demo-echo-green --image=…` + 동일 probe/label로 단순화 가능)
+ ```bash
+ kubectl -n ingress-compare get deployment demo-echo -o yaml | \
+ sed 's/name: demo-echo/name: demo-echo-green/;s/version: blue/version: green/' | \
+ kubectl apply -f -
+ ```
+ (실습에서는 `kubectl create deployment demo-echo-green --image=…` + 동일 probe/label로 단순화 가능)
 3. **Service** — selector `app=demo-echo` 유지, green만 붙일 때는 **selector를 blue/green 공통 app**으로 (`app=demo-echo`, version은 Service subset 또는 별도 Service)
 4. **전환** — nginx Ingress `demo-nginx` backend Service를 green Service로 patch, 또는 단일 Service selector를 `version=green`으로 변경
-5. **관측** — curl Host `demo.nginx.lab.origemite.com` 본문·헤더 변경 확인
+5. **관측** — curl Host `demo.nginx.lab.origemite.com` 본문, 헤더 변경 확인
 6. **롤백** — selector `version=blue` 복원, green scale 0
 
 ## 검증

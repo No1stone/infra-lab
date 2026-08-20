@@ -1,6 +1,6 @@
 # argo-rollouts ops
 
-Argo Rollouts Canary(10→30→50%)·Blue-Green·롤백 실습. 네임스페이스 `ops-rollouts`.
+Argo Rollouts Canary(10→30→50%), Blue-Green, 롤백 실습. 네임스페이스 `ops-rollouts`.
 
 ## 1) Rollouts controller 설치
 
@@ -18,10 +18,10 @@ kubectl -n argo-rollouts rollout status deployment/argo-rollouts
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 helm upgrade --install argo-rollouts argo/argo-rollouts \
-  -n argo-rollouts \
-  --create-namespace \
-  --wait \
-  --timeout 5m
+ -n argo-rollouts \
+ --create-namespace \
+ --wait \
+ --timeout 5m
 ```
 
 CLI 플러그인 (선택, promote/status 편의).
@@ -49,8 +49,8 @@ kubectl argo rollouts get rollout rollouts-demo -n ops-rollouts
 
 ```bash
 kubectl argo rollouts set image rollouts-demo \
-  rollouts-demo=argoproj/rollouts-demo:green \
-  -n ops-rollouts
+ rollouts-demo=argoproj/rollouts-demo:green \
+ -n ops-rollouts
 kubectl argo rollouts get rollout rollouts-demo -n ops-rollouts --watch
 ```
 
@@ -74,32 +74,32 @@ kill %1
 
 ## 4) Prometheus 메트릭 분석 (선택 / stub)
 
-kube-prometheus-stack이 있으면 AnalysisTemplate으로 Canary 게이트를 둘 수 있다. 아래는 **stub** — 실제 PromQL·임계값은 환경에 맞게 조정.
+kube-prometheus-stack이 있으면 AnalysisTemplate으로 Canary 게이트를 둘 수 있다. 아래는 **stub** — 실제 PromQL, 임계값은 환경에 맞게 조정.
 
 ```yaml
 # k8s/rollout/analysis-success-rate.yaml (참고용, 기본 Rollout에는 미연결)
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: success-rate
-  namespace: ops-rollouts
+ name: success-rate
+ namespace: ops-rollouts
 spec:
-  metrics:
-    - name: success-rate
-      interval: 30s
-      count: 3
-      successCondition: result[0] >= 0.95
-      failureLimit: 1
-      provider:
-        prometheus:
-          address: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
-          query: |
-            sum(rate(http_requests_total{job="rollouts-demo",status=~"2.."}[1m]))
-            /
-            sum(rate(http_requests_total{job="rollouts-demo"}[1m]))
+ metrics:
+ - name: success-rate
+ interval: 30s
+ count: 3
+ successCondition: result[0] >= 0.95
+ failureLimit: 1
+ provider:
+ prometheus:
+ address: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+ query: |
+ sum(rate(http_requests_total{job="rollouts-demo",status=~"2.."}[1m]))
+ /
+ sum(rate(http_requests_total{job="rollouts-demo"}[1m]))
 ```
 
-Rollout `strategy.canary.steps`에 `- analysis: { templates: [{ templateName: success-rate }] }`를 넣으면 메트릭 통과 시에만 다음 단계로 진행. 메트릭·ServiceMonitor 미구성 시 이 단계는 생략.
+Rollout `strategy.canary.steps`에 `- analysis: { templates: [{ templateName: success-rate }] }`를 넣으면 메트릭 통과 시에만 다음 단계로 진행. 메트릭, ServiceMonitor 미구성 시 이 단계는 생략.
 
 ## 5) Blue-Green (별도 전략)
 
@@ -108,15 +108,15 @@ Rollout `strategy.canary.steps`에 `- analysis: { templates: [{ templateName: su
 ```bash
 kubectl -n ops-rollouts patch rollout rollouts-demo --type merge -p '
 {
-  "spec": {
-    "strategy": {
-      "blueGreen": {
-        "activeService": "rollouts-demo-stable",
-        "previewService": "rollouts-demo-canary",
-        "autoPromotionEnabled": false
-      }
-    }
-  }
+ "spec": {
+ "strategy": {
+ "blueGreen": {
+ "activeService": "rollouts-demo-stable",
+ "previewService": "rollouts-demo-canary",
+ "autoPromotionEnabled": false
+ }
+ }
+ }
 }'
 ```
 
@@ -124,8 +124,8 @@ kubectl -n ops-rollouts patch rollout rollouts-demo --type merge -p '
 
 ```bash
 kubectl argo rollouts set image rollouts-demo \
-  rollouts-demo=argoproj/rollouts-demo:yellow \
-  -n ops-rollouts
+ rollouts-demo=argoproj/rollouts-demo:yellow \
+ -n ops-rollouts
 kubectl -n ops-rollouts port-forward svc/rollouts-demo-canary 8081:80 &
 curl -s localhost:8081/color
 kill %1
@@ -136,7 +136,7 @@ Canary로 되돌릴 때는 `k8s/rollout/rollouts-demo.yaml`을 다시 apply.
 
 ## 6) 롤백
 
-진행 중 Canary 중단·이전 ReplicaSet으로 되돌리기.
+진행 중 Canary 중단, 이전 ReplicaSet으로 되돌리기.
 
 ```bash
 kubectl argo rollouts abort rollouts-demo -n ops-rollouts

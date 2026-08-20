@@ -1,8 +1,8 @@
 # terraform
 
-Phase 0T — k3d `lab` 클러스터 부트스트랩 IaC(서버·에이전트·포트·노드 라벨). **필수 커리큘럼**, 구현은 **Experimental / 최소 구현 예정**.
+Phase 0T — k3d `lab` 클러스터 부트스트랩 IaC(서버, 에이전트, 포트, 노드 라벨). **필수 커리큘럼**, 구현은 **Experimental / 최소 구현 예정**.
 
-**DNS / Route53 범위 밖.** `origemite.com`은 개인용 — destroy·apply가 실제 DNS에 영향 주면 안 된다. `aws_route53_*` 두지 않는다. 이름 목록만 [`dns/inventory.yaml`](../dns/inventory.yaml). 랩 전용 도메인은 나중에 구매·연결.
+**DNS / Route53 범위 밖.** `origemite.com`은 개인용 — destroy, apply가 실제 DNS에 영향 주면 안 된다. `aws_route53_*` 두지 않는다. 이름 목록만 [`dns/inventory.yaml`](../dns/inventory.yaml). 랩 전용 도메인은 나중에 구매, 연결.
 
 ## 상태
 
@@ -14,7 +14,7 @@ Phase 0T — k3d `lab` 클러스터 부트스트랩 IaC(서버·에이전트·�
 
 ## Experimental — 계획 리소스 (`envs/lab`)
 
-다음을 **주석·로컬/null provider** 수준으로 옮길 예정. fake provider로 `terraform validate`가 깨지지 않게 한다.
+다음을 **주석, 로컬/null provider** 수준으로 옮길 예정. fake provider로 `terraform validate`가 깨지지 않게 한다.
 
 | 리소스 | 내용 |
 | --- | --- |
@@ -30,13 +30,13 @@ Phase 0T — k3d `lab` 클러스터 부트스트랩 IaC(서버·에이전트·�
 
 ```text
 terraform/
-  README.md
-  envs/
-    lab/
-      .gitkeep          ← 현재
-      main.tf           ← (예정) null_resource + local-exec k3d
-      variables.tf
-      outputs.tf
+ README.md
+ envs/
+ lab/
+ .gitkeep ← 현재
+ main.tf ← (예정) null_resource + local-exec k3d
+ variables.tf
+ outputs.tf
 ```
 
 ## 사용 (구현 후)
@@ -45,7 +45,7 @@ terraform/
 terraform -chdir=terraform/envs/lab init
 terraform -chdir=terraform/envs/lab plan
 terraform -chdir=terraform/envs/lab apply
-terraform -chdir=terraform/envs/lab destroy   # k3d cluster delete lab — DNS 무영향
+terraform -chdir=terraform/envs/lab destroy # k3d cluster delete lab — DNS 무영향
 ```
 
 ## 관련

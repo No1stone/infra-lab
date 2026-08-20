@@ -1,6 +1,6 @@
 # node-failure ops
 
-k3d **agent 노드** 장애·유지보수 시뮬레이션. voluntary disruption은 [`pdb.md`](pdb.md), involuntary(노드 다운)는 여기.
+k3d **agent 노드** 장애, 유지보수 시뮬레이션. voluntary disruption은 [`pdb.md`](pdb.md), involuntary(노드 다운)는 여기.
 
 ## 사전조건
 
@@ -34,7 +34,7 @@ kubectl get nodes
 kubectl get pods -A --field-selector spec.nodeName=k3d-lab-agent-0
 ```
 
-기대: Node `NotReady`, 해당 노드 파드 `Unknown`/`Terminating` → 스케줄러가 다른 agent로 재스케줄(replica>1·PDB·nodeSelector에 따름).
+기대: Node `NotReady`, 해당 노드 파드 `Unknown`/`Terminating` → 스케줄러가 다른 agent로 재스케줄(replica>1, PDB, nodeSelector에 따름).
 
 복구:
 
@@ -45,7 +45,7 @@ kubectl get nodes -w
 
 ## 시나리오 C — k3d server 중지 (클러스터 API 불안)
 
-**주의**: control plane 단일 server — lab 전체 API 중단. DR·클러스터 업그레이드 시나리오용.
+**주의**: control plane 단일 server — lab 전체 API 중단. DR, 클러스터 업그레이드 시나리오용.
 
 ```bash
 docker stop k3d-lab-server-0

@@ -2,7 +2,7 @@
 
 ## 목표
 
-**L3/L4 차단·DNS 실패·mTLS 거부·CiliumNetworkPolicy drop**을 재현하고, Hubble/Kiali/Tempo로 원인 구간을 좁힌다.
+**L3/L4 차단, DNS 실패, mTLS 거부, CiliumNetworkPolicy drop**을 재현하고, Hubble/Kiali/Tempo로 원인 구간을 좁힌다.
 
 ## 사전조건
 
@@ -13,18 +13,18 @@
 ## 절차
 
 1. **baseline** — client → echo 성공
-   ```bash
-   kubectl -n cilium-policy exec deploy/client -- wget -qO- echo:80
-   ```
+ ```bash
+ kubectl -n cilium-policy exec deploy/client -- wget -qO- echo:80
+ ```
 2. **NetworkPolicy default-deny** — [`cli/ops/chaos.md`](../../cli/ops/chaos.md) §5
-   ```bash
-   kubectl apply -f k8s/ciliumnetworkpolicy/default-deny-ingress.yaml
-   kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=3 echo:80 || echo BLOCKED
-   ```
+ ```bash
+ kubectl apply -f k8s/ciliumnetworkpolicy/default-deny-ingress.yaml
+ kubectl -n cilium-policy exec deploy/client -- wget -qO- --timeout=3 echo:80 || echo BLOCKED
+ ```
 3. **Hubble observe** — Dropped verdict
-   ```bash
-   cilium hubble observe --namespace cilium-policy --verdict Dropped
-   ```
+ ```bash
+ cilium hubble observe --namespace cilium-policy --verdict Dropped
+ ```
 4. **allow 정책 복구** — `allow-client-to-echo.yaml`
 5. **Gateway 단절** — nginx scale 0 — [`cli/ops/chaos.md`](../../cli/ops/chaos.md) §3
 6. **east-west mTLS** — PeerAuthentication STRICT + plaintext client 실패 — [`cli/ops/mtls.md`](../../cli/ops/mtls.md)

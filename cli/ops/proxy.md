@@ -1,12 +1,12 @@
 # proxy ops
 
-실제 호스트·포트·유저가 들어간 복붙 명령만 둔다. 기본 reverse SSH·nginx는 [`cli/doc/proxy.md`](../doc/proxy.md).
+실제 호스트, 포트, 유저가 들어간 복붙 명령만 둔다. 기본 reverse SSH, nginx는 [`cli/doc/proxy.md`](../doc/proxy.md).
 
 ## Phase 7 서브존 Host 라우팅
 
 Phase 7 FQDN은 `demo.<controller>.lab.origemite.com` (3레이블). DNS 이름 목록(외부 Route53, 변경 없음)은 [`dns/inventory.yaml`](../../dns/inventory.yaml) / [`dns-subzone.md`](dns-subzone.md).
 
-**기본 입구 nginx** (`*.nginx.lab.origemite.com`, `.201`) — 플랫폼·demo.nginx. 기존 80/443 터널.
+**기본 입구 nginx** (`*.nginx.lab.origemite.com`, `.201`) — 플랫폼, demo.nginx. 기존 80/443 터널.
 
 **다른 게이트웨이** (`demo.gateway…` 등) → 프록시 nginx `server_name` → 노트북 `820x` → MetalLB `.202`–`.207`.
 
@@ -29,56 +29,56 @@ Phase 7 FQDN은 `demo.<controller>.lab.origemite.com` (3레이블). DNS 이름 �
 ```nginx
 # 기본 입구 nginx — *.nginx.lab (플랫폼 + demo.nginx)
 server {
-    listen 80;
-    server_name *.nginx.lab.origemite.com;
-    location / {
-        proxy_pass http://127.0.0.1:<http-remote-port>;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+ listen 80;
+ server_name *.nginx.lab.origemite.com;
+ location / {
+ proxy_pass http://127.0.0.1:<http-remote-port>;
+ proxy_set_header Host $host;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto $scheme;
+ }
 }
 
 # Phase 7 — 다른 게이트웨이 Host별 820x
 server {
-    listen 80;
-    server_name demo.nginx.lab.origemite.com;
-    location / {
-        proxy_pass http://127.0.0.1:8201;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+ listen 80;
+ server_name demo.nginx.lab.origemite.com;
+ location / {
+ proxy_pass http://127.0.0.1:8201;
+ proxy_set_header Host $host;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ proxy_set_header X-Forwarded-Proto $scheme;
+ }
 }
 server {
-    listen 80;
-    server_name demo.gateway.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8202; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.gateway.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8202; proxy_set_header Host $host; }
 }
 server {
-    listen 80;
-    server_name demo.cilium.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8203; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.cilium.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8203; proxy_set_header Host $host; }
 }
 server {
-    listen 80;
-    server_name demo.kong.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8204; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.kong.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8204; proxy_set_header Host $host; }
 }
 server {
-    listen 80;
-    server_name demo.traefik.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8205; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.traefik.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8205; proxy_set_header Host $host; }
 }
 server {
-    listen 80;
-    server_name demo.istio.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8206; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.istio.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8206; proxy_set_header Host $host; }
 }
 server {
-    listen 80;
-    server_name demo.haproxy.lab.origemite.com;
-    location / { proxy_pass http://127.0.0.1:8207; proxy_set_header Host $host; }
+ listen 80;
+ server_name demo.haproxy.lab.origemite.com;
+ location / { proxy_pass http://127.0.0.1:8207; proxy_set_header Host $host; }
 }
 ```
 
@@ -102,15 +102,15 @@ nc -zv 127.0.0.1 8201
 
 ```bash
 autossh -M 0 -N \
-  -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes \
-  -R 8201:127.0.0.1:8201 \
-  -R 8202:127.0.0.1:8202 \
-  -R 8203:127.0.0.1:8203 \
-  -R 8204:127.0.0.1:8204 \
-  -R 8205:127.0.0.1:8205 \
-  -R 8206:127.0.0.1:8206 \
-  -R 8207:127.0.0.1:8207 \
-  <proxy-user>@<proxy-host>
+ -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes \
+ -R 8201:127.0.0.1:8201 \
+ -R 8202:127.0.0.1:8202 \
+ -R 8203:127.0.0.1:8203 \
+ -R 8204:127.0.0.1:8204 \
+ -R 8205:127.0.0.1:8205 \
+ -R 8206:127.0.0.1:8206 \
+ -R 8207:127.0.0.1:8207 \
+ <proxy-user>@<proxy-host>
 ```
 
 기존 80/443/22 터널과 **같은 SSH 세션**에 `-R`을 추가해도 된다.

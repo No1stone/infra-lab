@@ -1,4 +1,4 @@
-# 07 Argo CD·Headlamp
+# 07 Argo CD, Headlamp
 
 ## 목표
 -
@@ -12,7 +12,7 @@
 ## 캡처
 <!-- ![설명](images/07-argocd-headlamp/xxx.png) -->
 
-## 에러·트러블슈팅
+## 에러, 트러블슈팅
 | 증상 | 원인 | 조치 |
 | --- | --- | --- |
 | | | |

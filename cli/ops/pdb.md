@@ -24,8 +24,8 @@ kubectl -n ops-pdb port-forward svc/ops-pdb-web 8080:80
 
 ```bash
 while true; do
-  curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" http://127.0.0.1:8080/ || echo "fail"
-  sleep 0.5
+ curl -s -o /dev/null -w "%{http_code} %{time_total}s\n" http://127.0.0.1:8080/ || echo "fail"
+ sleep 0.5
 done
 ```
 
@@ -62,7 +62,7 @@ kubectl -n ops-pdb get pdb ops-pdb-web -o yaml
 kubectl get events -A --field-selector involvedObject.kind=Pod --sort-by='.lastTimestamp' | tail -20
 ```
 
-drain 중단·노드 복구:
+drain 중단, 노드 복구:
 
 ```bash
 kubectl uncordon "$NODE"

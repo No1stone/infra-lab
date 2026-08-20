@@ -2,7 +2,7 @@
 
 **kubectl 기반** 장애 주입 실습. Chaos Mesh 설치는 선택(아래 참고) — 랩은 `delete`/`scale`/`cordon`/`NetworkPolicy` 위주.
 
-## 네임스페이스·대상
+## 네임스페이스, 대상
 
 | 대상 | NS | 리소스 |
 | --- | --- | --- |
@@ -13,13 +13,13 @@
 | mTLS 데모 | `ingress-compare`, `istio-system` | sidecar + [`mtls.md`](mtls.md) |
 | NetworkPolicy | `cilium-policy` | [`cilium.md`](cilium.md) |
 
-호스트·MetalLB: [`dns/inventory.yaml`](../../dns/inventory.yaml).
+호스트, MetalLB: [`dns/inventory.yaml`](../../dns/inventory.yaml).
 
 ---
 
 ## 1) Pod delete (무작위/특정 파드)
 
-단일 replica 워크로드 — 즉시 다운타임. PDB·multi-replica와 대비: [`pdb.md`](pdb.md).
+단일 replica 워크로드 — 즉시 다운타임. PDB, multi-replica와 대비: [`pdb.md`](pdb.md).
 
 ```bash
 kubectl -n redis delete pod -l app=redis --wait=false
@@ -37,7 +37,7 @@ while kubectl -n redis get pod -l app=redis -o name | head -1 | xargs -r kubectl
 
 ## 2) Node down
 
-agent 중지·drain — 상세: [`node-failure.md`](node-failure.md).
+agent 중지, drain — 상세: [`node-failure.md`](node-failure.md).
 
 ```bash
 NODE=k3d-lab-agent-0
@@ -94,7 +94,7 @@ kubectl -n kafka rollout status deployment/kafka
 
 ```bash
 kubectl run -it --rm redis-test --image=redis:7 --restart=Never -- \
-  redis-cli -h redis.redis.svc ping
+ redis-cli -h redis.redis.svc ping
 ```
 
 ---
@@ -144,7 +144,7 @@ fluent-bit: [`helm/values/fluent-bit.yaml`](../../helm/values/fluent-bit.yaml)
 
 ### Traces — Tempo
 
-장애 전후 동일 trace id·error span — [`otel-trace-lab.md`](otel-trace-lab.md).
+장애 전후 동일 trace id, error span — [`otel-trace-lab.md`](otel-trace-lab.md).
 
 ```bash
 kubectl -n tempo port-forward svc/tempo 4317:4317
@@ -169,12 +169,12 @@ Kiali: `kiali.nginx.lab.origemite.com` — traffic graph에서 redis/kafka edge 
 ```bash
 helm repo add chaos-mesh https://charts.chaos-mesh.org
 helm upgrade --install chaos-mesh chaos-mesh/chaos-mesh \
-  -n chaos-mesh --create-namespace \
-  --set chaosDaemon.runtime=containerd \
-  --set chaosDaemon.socketPath=/run/k3s/containerd/containerd.sock
+ -n chaos-mesh --create-namespace \
+ --set chaosDaemon.runtime=containerd \
+ --set chaosDaemon.socketPath=/run/k3s/containerd/containerd.sock
 ```
 
-PodChaos·NetworkChaos CR — **랩 필수 아님**. 설치 시 RBAC·k3d socket 경로 확인.
+PodChaos, NetworkChaos CR — **랩 필수 아님**. 설치 시 RBAC, k3d socket 경로 확인.
 
 ---
 

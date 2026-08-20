@@ -4,7 +4,7 @@ HorizontalPodAutoscaler(HPA)로 CPU 부하에 따라 `ops-hpa-web` replica를 �
 
 ## metrics-server (k3d)
 
-HPA·`kubectl top`은 metrics-server가 없으면 동작하지 않는다. k3s/k3d는 기본 포함되지 않을 수 있음.
+HPA, `kubectl top`은 metrics-server가 없으면 동작하지 않는다. k3s/k3d는 기본 포함되지 않을 수 있음.
 
 공식 manifest + k3d kubelet TLS 우회:
 
@@ -12,7 +12,7 @@ HPA·`kubectl top`은 metrics-server가 없으면 동작하지 않는다. k3s/k3
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 kubectl -n kube-system rollout status deployment/metrics-server
 kubectl -n kube-system patch deployment metrics-server --type='json' \
-  -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+ -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
 kubectl -n kube-system rollout status deployment/metrics-server
 kubectl top nodes
 kubectl top pods -A
@@ -24,13 +24,13 @@ Helm 대안 (kubernetes-sigs chart):
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 helm repo update
 helm upgrade --install metrics-server metrics-server/metrics-server \
-  -n kube-system \
-  --set args="{--kubelet-insecure-tls}" \
-  --wait \
-  --timeout 5m
+ -n kube-system \
+ --set args="{--kubelet-insecure-tls}" \
+ --wait \
+ --timeout 5m
 ```
 
-## 워크로드·HPA 적용
+## 워크로드, HPA 적용
 
 ```bash
 kubectl apply -f k8s/namespace/ops-hpa.yaml
@@ -76,11 +76,11 @@ hey -z 3m -c 50 http://127.0.0.1:8081/
 
 ```bash
 kubectl run k6-load -n ops-hpa --rm -i --restart=Never \
-  --image=grafana/k6:0.54.0 -- \
-  run - --vus 30 --duration 3m <<'EOF'
+ --image=grafana/k6:0.54.0 -- \
+ run - --vus 30 --duration 3m <<'EOF'
 import http from 'k6/http';
 export default function () {
-  http.get('http://ops-hpa-web.ops-hpa.svc.cluster.local/');
+ http.get('http://ops-hpa-web.ops-hpa.svc.cluster.local/');
 }
 EOF
 ```
@@ -118,7 +118,7 @@ Helm 미설치 시 — [`cli/ops/helm.md`](helm.md) Phase 2 `kube-prometheus-sta
 
 ```bash
 kubectl autoscale deployment ops-hpa-web -n ops-hpa \
-  --cpu-percent=50 --min=1 --max=5
+ --cpu-percent=50 --min=1 --max=5
 ```
 
 YAML manifest와 중복 적용하지 말 것. 비교 후 정리:

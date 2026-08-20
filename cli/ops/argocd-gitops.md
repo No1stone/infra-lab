@@ -1,6 +1,6 @@
 # argocd-gitops ops
 
-`demo-echo` Application으로 GitOps·drift·Self Heal 실습. Argo CD UI: `argocd.nginx.lab.origemite.com`.
+`demo-echo` Application으로 GitOps, drift, Self Heal 실습. Argo CD UI: `argocd.nginx.lab.origemite.com`.
 
 ## 사전조건
 
@@ -19,18 +19,18 @@ kubectl -n argocd get ingress
 
 ```bash
 helm upgrade --install argocd argo/argo-cd \
-  -n argocd \
-  --create-namespace \
-  -f helm/values/argocd.yaml \
-  --wait \
-  --timeout 10m
+ -n argocd \
+ --create-namespace \
+ -f helm/values/argocd.yaml \
+ --wait \
+ --timeout 10m
 ```
 
 공개 Git 저장소 등록 (비공개면 `--username` / `--password` 또는 SSH 키 추가).
 
 ```bash
 argocd repo add https://github.com/<org>/infra-lab.git \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 ```
 
 ## 2) Application 적용
@@ -45,7 +45,7 @@ kubectl apply -f argocd/application/demo-echo.yaml
 
 ```bash
 argocd app get demo-echo \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 kubectl -n ingress-compare get deploy,svc
 ```
 
@@ -62,16 +62,16 @@ kubectl -n ingress-compare edit deployment demo-echo
 
 ```bash
 kubectl -n ingress-compare patch deployment demo-echo \
-  -p '{"spec":{"replicas":3}}'
+ -p '{"spec":{"replicas":3}}'
 ```
 
 Argo CD는 OutOfSync로 표시된다.
 
 ```bash
 argocd app get demo-echo \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 argocd app diff demo-echo \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 ```
 
 ## 4) Self Heal — Git desired state로 복원
@@ -80,7 +80,7 @@ argocd app diff demo-echo \
 
 ```bash
 argocd app sync demo-echo \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 kubectl -n ingress-compare get deployment demo-echo -o jsonpath='{.spec.replicas}{"\n"}'
 ```
 
@@ -93,7 +93,7 @@ kubectl -n ingress-compare get deployment demo-echo -o jsonpath='{.spec.replicas
 ```bash
 # 예: k8s/deployment/demo-echo.yaml 의 args 텍스트 변경 → commit → push
 argocd app get demo-echo \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 kubectl -n ingress-compare get deployment demo-echo -o yaml | grep -A2 'args:'
 ```
 
@@ -107,7 +107,7 @@ Application이 관리하던 리소스를 Git에서 제거하고 push하면 `prun
 
 | 항목 | 의미 |
 | --- | --- |
-| **Drift** | Git(desired)과 클러스터(live) 불일치. 수동 `kubectl edit`·장애 복구 중 생김 |
+| **Drift** | Git(desired)과 클러스터(live) 불일치. 수동 `kubectl edit`, 장애 복구 중 생김 |
 | **Auto Sync** | Git 변경을 주기적으로 감지해 클러스터에 자동 적용 |
 | **Self Heal** | drift 발생 시 Git 기준으로 live state를 되돌림 |
 | **Prune** | Git에 없는 리소스를 클러스터에서 삭제 |
@@ -116,7 +116,7 @@ Application이 관리하던 리소스를 Git에서 제거하고 push하면 `prun
 
 ```bash
 argocd app delete demo-echo --yes \
-  --server argocd.nginx.lab.origemite.com --grpc-web --insecure
+ --server argocd.nginx.lab.origemite.com --grpc-web --insecure
 ```
 
 ## 관련

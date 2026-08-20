@@ -77,6 +77,8 @@ doc
 ├── 14-ingress-compare.md
 ├── 15-gitops-oidc.md
 ├── 90-destroy-and-reset.md
+├── glossary.md
+├── official-docs.md
 ├── README.md
 └── tree.md
 ```

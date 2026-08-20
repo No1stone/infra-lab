@@ -1,10 +1,10 @@
 # Route53 / DNS inventory (참조 전용)
 #
-# origemite.com = 개인용 도메인. 이 저장소에서 생성·변경·삭제하지 않는다.
-# destroy / terraform destroy / 랩 초기화 시 DNS·프록시 실제 인프라에 손대지 않는다.
+# origemite.com = 개인용 도메인. 이 저장소에서 생성, 변경, 삭제하지 않는다.
+# destroy / terraform destroy / 랩 초기화 시 DNS, 프록시 실제 인프라에 손대지 않는다.
 #
 # 랩 공개 FQDN 규칙 (3뎁스만):
-#   <앱>.<게이트웨이>.lab.origemite.com
+# <앱>.<게이트웨이>.lab.origemite.com
 # 예: argocd.nginx.lab…, demo.istio.lab…
 # 2뎁스(<앱>.lab.origemite.com)는 쓰지 않는다.
 #
@@ -20,47 +20,47 @@ hostname_depth: 3
 
 # 게이트웨이별 와일드카드 (외부 관리). 2뎁스 *.lab.origemite.com 은 랩에서 사용 안 함.
 gateway_subzone_wildcards:
-  # - name: "*.nginx.lab.origemite.com"
-  # - name: "*.gateway.lab.origemite.com"
-  # - name: "*.cilium.lab.origemite.com"
-  # - name: "*.kong.lab.origemite.com"
-  # - name: "*.traefik.lab.origemite.com"
-  # - name: "*.istio.lab.origemite.com"
-  # - name: "*.haproxy.lab.origemite.com"
+ # - name: "*.nginx.lab.origemite.com"
+ # - name: "*.gateway.lab.origemite.com"
+ # - name: "*.cilium.lab.origemite.com"
+ # - name: "*.kong.lab.origemite.com"
+ # - name: "*.traefik.lab.origemite.com"
+ # - name: "*.istio.lab.origemite.com"
+ # - name: "*.haproxy.lab.origemite.com"
 
 # 플랫폼 UI — 기본 입구 nginx (.201)
 platform_hosts:
-  - fqdn: argocd.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: grafana.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: headlamp.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: harbor.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: keycloak.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: kiali.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: rabbitmq.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: vault.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: lab.nginx.lab.origemite.com
-    metallb: 172.18.255.201
+ - fqdn: argocd.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: grafana.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: headlamp.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: harbor.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: keycloak.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: kiali.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: rabbitmq.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: vault.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: lab.nginx.lab.origemite.com
+ metallb: 172.18.255.201
 
 phase7_demo_hosts:
-  - fqdn: demo.nginx.lab.origemite.com
-    metallb: 172.18.255.201
-  - fqdn: demo.gateway.lab.origemite.com
-    metallb: 172.18.255.202
-  - fqdn: demo.cilium.lab.origemite.com
-    metallb: 172.18.255.203
-  - fqdn: demo.kong.lab.origemite.com
-    metallb: 172.18.255.204
-  - fqdn: demo.traefik.lab.origemite.com
-    metallb: 172.18.255.205
-  - fqdn: demo.istio.lab.origemite.com
-    metallb: 172.18.255.206
-  - fqdn: demo.haproxy.lab.origemite.com
-    metallb: 172.18.255.207
+ - fqdn: demo.nginx.lab.origemite.com
+ metallb: 172.18.255.201
+ - fqdn: demo.gateway.lab.origemite.com
+ metallb: 172.18.255.202
+ - fqdn: demo.cilium.lab.origemite.com
+ metallb: 172.18.255.203
+ - fqdn: demo.kong.lab.origemite.com
+ metallb: 172.18.255.204
+ - fqdn: demo.traefik.lab.origemite.com
+ metallb: 172.18.255.205
+ - fqdn: demo.istio.lab.origemite.com
+ metallb: 172.18.255.206
+ - fqdn: demo.haproxy.lab.origemite.com
+ metallb: 172.18.255.207

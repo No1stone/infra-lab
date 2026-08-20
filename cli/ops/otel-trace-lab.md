@@ -1,29 +1,29 @@
 # otel-trace-lab ops
 
-분산 트레이스 실습 — **OTLP → Collector → Tempo → Grafana**. 앱 스텁(Spring Boot·Gateway·gRPC)은 선택; 먼저 파이프라인과 UI 접근을 익힌다.
+분산 트레이스 실습 — **OTLP → Collector → Tempo → Grafana**. 앱 스텁(Spring Boot, Gateway, gRPC)은 선택; 먼저 파이프라인과 UI 접근을 익힌다.
 
 ## 아키텍처 (랩 기준)
 
 ```text
 [Client]
-   │ HTTP/gRPC
-   ▼
-[Gateway]  nginx / Istio / Kong … (ingress-compare 또는 nginx)
-   │
-   ▼
-[Service]  (향후 Spring Boot stub — OTLP SDK)
-   ├─► [Redis]   redis.redis.svc:6379
-   └─► [Kafka]   kafka.kafka.svc:9092
-         │
-         │ span export (OTLP gRPC/HTTP)
-         ▼
-[OTel Collector]  otel-collector.otel.svc  :4317 / :4318
-         │ otlp/tempo
-         ▼
-[Tempo]           tempo.tempo.svc:4317
-         │ Grafana datasource
-         ▼
-[Grafana]         grafana.nginx.lab.origemite.com  (또는 port-forward)
+ │ HTTP/gRPC
+ ▼
+[Gateway] nginx / Istio / Kong … (ingress-compare 또는 nginx)
+ │
+ ▼
+[Service] (향후 Spring Boot stub — OTLP SDK)
+ ├─► [Redis] redis.redis.svc:6379
+ └─► [Kafka] kafka.kafka.svc:9092
+ │
+ │ span export (OTLP gRPC/HTTP)
+ ▼
+[OTel Collector] otel-collector.otel.svc :4317 / :4318
+ │ otlp/tempo
+ ▼
+[Tempo] tempo.tempo.svc:4317
+ │ Grafana datasource
+ ▼
+[Grafana] grafana.nginx.lab.origemite.com (또는 port-forward)
 ```
 
 계획된 span 종류:
@@ -57,15 +57,15 @@ Tempo datasource는 kube-prometheus-stack Grafana에 **수동 추가** 또는 va
 
 ## Grafana / Tempo 접근 (복붙)
 
-### Ingress (권장 — MetalLB·프록시 연결 후)
+### Ingress (권장 — MetalLB, 프록시 연결 후)
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" \
-  -H 'Host: grafana.nginx.lab.origemite.com' \
-  http://172.18.255.201/
+ -H 'Host: grafana.nginx.lab.origemite.com' \
+ http://172.18.255.201/
 ```
 
-브라우저: `https://grafana.nginx.lab.origemite.com` (TLS는 cert-manager·프록시 설정에 따름). DNS·프록시: [`proxy.md`](proxy.md), [`dns/inventory.yaml`](../../dns/inventory.yaml).
+브라우저: `https://grafana.nginx.lab.origemite.com` (TLS는 cert-manager, 프록시 설정에 따름). DNS, 프록시: [`proxy.md`](proxy.md), [`dns/inventory.yaml`](../../dns/inventory.yaml).
 
 ### port-forward (로컬만)
 
@@ -77,7 +77,7 @@ kubectl -n monitoring port-forward svc/kube-prometheus-stack-grafana 3000:80
 
 브라우저: `http://127.0.0.1:3000` (기본 admin / chart secret — `kubectl -n monitoring get secret kube-prometheus-stack-grafana -o jsonpath='{.data.admin-password}' | base64 -d`).
 
-Tempo OTLP (앱·curl 테스트용):
+Tempo OTLP (앱, curl 테스트용):
 
 ```bash
 kubectl -n tempo port-forward svc/tempo 4317:4317 4318:4318
@@ -101,8 +101,8 @@ Tempo 수신 확인 (테스트 span — port-forward 후):
 
 ```bash
 curl -sS -X POST http://127.0.0.1:4318/v1/traces \
-  -H 'Content-Type: application/json' \
-  -d '{"resourceSpans":[{"resource":{"attributes":[{"key":"service.name","value":{"stringValue":"otel-trace-lab-manual"}}]},"scopeSpans":[{"spans":[{"traceId":"0123456789abcdef0123456789abcdef","spanId":"0123456789abcdef","name":"manual-test","kind":1,"startTimeUnixNano":"'$(date +%s)000000000'","endTimeUnixNano":"'$(date +%s)000000001'"}]}]}]}'
+ -H 'Content-Type: application/json' \
+ -d '{"resourceSpans":[{"resource":{"attributes":[{"key":"service.name","value":{"stringValue":"otel-trace-lab-manual"}}]},"scopeSpans":[{"spans":[{"traceId":"0123456789abcdef0123456789abcdef","spanId":"0123456789abcdef","name":"manual-test","kind":1,"startTimeUnixNano":"'$(date +%s)000000000'","endTimeUnixNano":"'$(date +%s)000000001'"}]}]}]}'
 ```
 
 Grafana Explore → Tempo에서 `service.name=otel-trace-lab-manual` 검색.
@@ -135,7 +135,7 @@ REDIS_HOST=redis.redis.svc.cluster.local
 KAFKA_BOOTSTRAP=kafka.kafka.svc.cluster.local:9092
 ```
 
-## 메트릭·로그 연계
+## 메트릭, 로그 연계
 
 | 신호 | 저장 | 조회 |
 | --- | --- | --- |
@@ -143,7 +143,7 @@ KAFKA_BOOTSTRAP=kafka.kafka.svc.cluster.local:9092
 | Logs | fluent-bit → Loki (values 별도) | Grafana → Loki |
 | Traces | Collector → Tempo | Grafana → Tempo, Kiali |
 
-카오스·장애 후 trace id로 로그 상관: Grafana **Trace to logs** (Loki datasource 연결 후).
+카오스, 장애 후 trace id로 로그 상관: Grafana **Trace to logs** (Loki datasource 연결 후).
 
 ## 선택 — 앱 스텁 Deployment
 

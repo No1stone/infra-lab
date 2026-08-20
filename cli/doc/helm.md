@@ -14,13 +14,13 @@ Helm 클라이언트 버전을 짧게 출력한다.
 helm version --short
 ```
 
-Helm 클라이언트·Go 버전을 자세히 출력한다.
+Helm 클라이언트, Go 버전을 자세히 출력한다.
 
 ```bash
 helm version
 ```
 
-Helm이 쓰는 경로·환경 변수를 출력한다.
+Helm이 쓰는 경로, 환경 변수를 출력한다.
 
 ```bash
 helm env
@@ -236,7 +236,7 @@ helm show readme <리포>/<차트>
 helm show crds <리포>/<차트>
 ```
 
-차트·values·README·CRD를 모두 본다.
+차트, values, README, CRD를 모두 본다.
 
 ```bash
 helm show all <리포>/<차트>
@@ -650,7 +650,7 @@ helm list -A -o json
 helm list -n <네임스페이스> --uninstalled
 ```
 
-릴리스 상태를 본다. 리소스·NOTES를 포함한다.
+릴리스 상태를 본다. 리소스, NOTES를 포함한다.
 
 ```bash
 helm status <릴리스> -n <네임스페이스>
@@ -740,13 +740,13 @@ helm get notes <릴리스> -n <네임스페이스>
 helm get hooks <릴리스> -n <네임스페이스>
 ```
 
-차트 이름·버전·앱 버전 메타데이터를 본다.
+차트 이름, 버전, 앱 버전 메타데이터를 본다.
 
 ```bash
 helm get metadata <릴리스> -n <네임스페이스>
 ```
 
-values·매니페스트·훅·NOTES를 한 번에 본다.
+values, 매니페스트, 훅, NOTES를 한 번에 본다.
 
 ```bash
 helm get all <릴리스> -n <네임스페이스>
@@ -814,7 +814,7 @@ helm template <릴리스> <차트경로> --output-dir <출력디렉터리>
 helm template <릴리스> <차트경로> --is-upgrade -f values.yaml
 ```
 
-차트 문법·관례를 검사한다.
+차트 문법, 관례를 검사한다.
 
 ```bash
 helm lint <차트경로>
@@ -1044,23 +1044,23 @@ helm upgrade --install <릴리스> <리포>/<차트> -n <네임스페이스> --d
 
 ```bash
 helm upgrade --install <릴리스> <리포>/<차트> \
-  --version <버전> \
-  -n <네임스페이스> \
-  --create-namespace \
-  -f values.yaml \
-  --set <ingress호스트키>=<앱>.lab.origemite.com \
-  --wait \
-  --timeout 10m \
-  --rollback-on-failure
+ --version <버전> \
+ -n <네임스페이스> \
+ --create-namespace \
+ -f values.yaml \
+ --set <ingress호스트키>=<앱>.lab.origemite.com \
+ --wait \
+ --timeout 10m \
+ --rollback-on-failure
 ```
 
 적용 전 확인만 한다.
 
 ```bash
 helm upgrade --install <릴리스> <리포>/<차트> \
-  --version <버전> \
-  -n <네임스페이스> \
-  --create-namespace \
-  -f values.yaml \
-  --dry-run --debug
+ --version <버전> \
+ -n <네임스페이스> \
+ --create-namespace \
+ -f values.yaml \
+ --dry-run --debug
 ```
