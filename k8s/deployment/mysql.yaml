@@ -19,8 +19,37 @@ spec:
         - name: mysql
           image: mysql:8.0
           ports:
-            - containerPort: 3306
+            - name: mysql
+              containerPort: 3306
           envFrom:
             - secretRef:
                 name: mysql
                 optional: true
+          volumeMounts:
+            - name: mysql-config
+              mountPath: /etc/mysql/conf.d/lab.cnf
+              subPath: my.cnf
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            tcpSocket:
+              port: mysql
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: mysql
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+      volumes:
+        - name: mysql-config
+          configMap:
+            name: mysql-config

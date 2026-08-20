@@ -18,9 +18,42 @@ spec:
       containers:
         - name: vault
           image: hashicorp/vault:1.16
+          args:
+            - server
+            - -config=/vault/config/vault.hcl
           ports:
-            - containerPort: 8200
+            - name: http
+              containerPort: 8200
           envFrom:
             - secretRef:
                 name: vault
                 optional: true
+          volumeMounts:
+            - name: vault-config
+              mountPath: /vault/config
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /v1/sys/health?standbyok=true
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+      volumes:
+        - name: vault-config
+          configMap:
+            name: vault-config
