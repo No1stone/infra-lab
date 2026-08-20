@@ -1,0 +1,29 @@
+# MetalLB IP 풀 — k3d/docker bridge 네트워크 CIDR에 맞게 addresses를 수정 후 apply.
+# PLACEHOLDER: docker network inspect k3d-lab 후 대역 확인.
+#
+# Phase 7 진입점 비교 — LoadBalancer 고정 IP (helm/values 와 동일)
+#   172.18.255.201  ingress-nginx     demo.nginx.lab.origemite.com
+#   172.18.255.202  Envoy Gateway     demo.gateway.lab.origemite.com
+#   172.18.255.203  Cilium Gateway    demo.cilium.lab.origemite.com
+#   172.18.255.204  Kong              demo.kong.lab.origemite.com
+#   172.18.255.205  Traefik           demo.traefik.lab.origemite.com
+#   172.18.255.206  Istio Gateway     demo.istio.lab.origemite.com
+#   172.18.255.207  HAProxy Ingress   demo.haproxy.lab.origemite.com
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: lab-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.18.255.200-172.18.255.250
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: lab-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - lab-pool
