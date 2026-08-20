@@ -1,0 +1,32 @@
+# kiali/kiali-server. Operator(kiali-operator) 대신 server 차트 단독 사용.
+# Istio 메시가 있어야 의미 있음. lab은 anonymous + nginx Ingress.
+auth:
+  strategy: anonymous
+
+deployment:
+  accessible_namespaces:
+    - "**"
+  ingress_enabled: true
+  ingress:
+    class_name: nginx
+    override_yaml:
+      spec:
+        rules:
+          - host: kiali.lab.origemite.com
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: kiali
+                      port:
+                        number: 20001
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi

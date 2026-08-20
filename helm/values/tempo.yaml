@@ -1,0 +1,37 @@
+# grafana/tempo. monolithic(single binary) 1 replica, 로컬 디스크.
+replicas: 1
+
+tempo:
+  reportingEnabled: false
+  retention: 24h
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /var/tempo/traces
+      wal:
+        path: /var/tempo/wal
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+tempoQuery:
+  enabled: false
+
+serviceMonitor:
+  enabled: false

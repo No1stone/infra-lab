@@ -1,0 +1,42 @@
+# open-telemetry/opentelemetry-collector. deployment 1 replica, OTLP 수신.
+mode: deployment
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+config:
+  exporters:
+    otlp/tempo:
+      # helm/values/tempo.yaml → release tempo, ns tempo
+      endpoint: tempo.tempo.svc:4317
+      tls:
+        insecure: true
+    prometheusremotewrite:
+      # helm/values/kube-prometheus-stack.yaml → release kube-prometheus-stack, ns monitoring
+      endpoint: http://kube-prometheus-stack-prometheus.monitoring.svc:9090/api/v1/write
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [otlp/tempo]
+      metrics:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [prometheusremotewrite]
+      logs:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [debug]
+
+serviceMonitor:
+  enabled: false
+
+autoscaling:
+  enabled: false

@@ -1,0 +1,40 @@
+# codecentric/keycloakx. bitnami 회피, quay.io keycloak 이미지.
+# admin 계정: Secret keycloak-admin (values에 비밀번호 넣지 않음).
+# DB는 별도(mysql 노드 등). extraEnv 로 Secret 참조.
+replicas: 1
+
+image:
+  repository: quay.io/keycloak/keycloak
+
+command:
+  - /opt/keycloak/bin/kc.sh
+  - start
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  rules:
+    - host: keycloak.lab.origemite.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-admin
+        key: username
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-admin
+        key: password

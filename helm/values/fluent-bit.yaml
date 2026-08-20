@@ -1,0 +1,35 @@
+# fluent/fluent-bit. DaemonSet, Loki로 로그 전달.
+kind: DaemonSet
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+testFramework:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+
+config:
+  outputs: |
+    [OUTPUT]
+        Name loki
+        Match kube.*
+        # helm/values/loki.yaml → release loki, ns loki
+        Host loki.loki.svc.cluster.local
+        Port 3100
+        Labels job=fluent-bit
+        LabelKeys $kubernetes['namespace_name'],$kubernetes['pod_name'],$kubernetes['container_name']
+        AutoKubernetesLabels on
+
+    [OUTPUT]
+        Name loki
+        Match host.*
+        Host loki.loki.svc.cluster.local
+        Port 3100
+        Labels job=fluent-bit,stream=host

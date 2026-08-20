@@ -1,0 +1,23 @@
+# opensearch-project/opensearch. phase-2 로그 저장소 — 단일 노드 경량.
+# Dashboards는 opensearch-dashboards 차트 별도. Ingress 예: opensearch-dashboards.lab.origemite.com
+singleNode: true
+replicas: 1
+
+opensearchJavaOpts: "-Xmx512m -Xms512m"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 1536Mi
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+sysctlInit:
+  enabled: true
+
+# lab: security demo 플러그인 기본값 유지, 프로덕션 전 보안 설정 필수

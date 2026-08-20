@@ -1,0 +1,24 @@
+# istio/istiod. sidecar 모드. v1에서 ambient 비활성.
+pilot:
+  autoscaleEnabled: false
+  replicaCount: 1
+  env:
+    PILOT_ENABLE_GATEWAY_API: "true"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+meshConfig:
+  enableTracing: true
+  extensionProviders:
+    - name: otel
+      opentelemetry:
+        service: otel-collector.otel.svc.cluster.local
+        port: 4317
+  defaultProviders:
+    tracing:
+      - otel

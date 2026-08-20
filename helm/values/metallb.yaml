@@ -1,0 +1,28 @@
+# metallb/metallb. Layer2 IP 풀은 별도 IPAddressPool/L2Advertisement로 설정.
+prometheus:
+  rbacPrometheus: false
+  podMonitor:
+    enabled: false
+  serviceMonitor:
+    enabled: false
+
+frrk8s:
+  enabled: false
+
+controller:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+speaker:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi

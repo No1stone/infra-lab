@@ -1,5 +1,23 @@
-# ingress-nginx. 차트는 아직 설치하지 않는다.
+# lab Ingress 진입점. ingress-nginx는 EOL 예정 — 이후 Gateway API 전환 검토.
+# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
 controller:
   replicaCount: 1
   service:
     type: LoadBalancer
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: "172.18.255.201"
+  ingressClassResource:
+    name: nginx
+    default: true
+    controllerValue: k8s.io/ingress-nginx
+  admissionWebhooks:
+    enabled: false
+  config:
+    use-forwarded-headers: "true"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

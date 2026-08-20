@@ -1,0 +1,19 @@
+# istio/gateway. Gateway API / Istio ingress gateway.
+# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+service:
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "172.18.255.206"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi

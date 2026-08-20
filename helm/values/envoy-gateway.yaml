@@ -1,0 +1,17 @@
+# envoyproxy/gateway-helm (OCI). Gateway API 컨트롤러.
+# helm install eg oci://docker.io/envoyproxy/gateway-helm \
+#   -n envoy-gateway-system --create-namespace -f helm/values/envoy-gateway.yaml
+# Gateway 생성 후 proxy Service에 MetalLB IP 172.18.255.202 고정 (필요 시 annotation).
+deployment:
+  replicas: 1
+  envoyGateway:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+hpa:
+  enabled: false

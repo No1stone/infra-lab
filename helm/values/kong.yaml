@@ -1,0 +1,22 @@
+# kong/kong. Ingress Controller + Kong proxy.
+# MetalLB IP: k3d docker bridge 대역 — 실제 docker network에 맞게 수정.
+replicaCount: 1
+
+ingressController:
+  enabled: true
+  ingressClass: kong
+
+proxy:
+  enabled: true
+  type: LoadBalancer
+  loadBalancerIP: "172.18.255.204"
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "172.18.255.204"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi

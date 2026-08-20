@@ -1,0 +1,98 @@
+# harbor/harbor. lab container registry.
+# 관리자 비밀번호: Secret harbor-admin (키 HARBOR_ADMIN_PASSWORD). values에 비밀번호 넣지 않음.
+existingSecretAdminPassword: harbor-admin
+existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+
+expose:
+  type: ingress
+  tls:
+    enabled: false
+  ingress:
+    className: nginx
+    hosts:
+      core: harbor.lab.origemite.com
+
+externalURL: https://harbor.lab.origemite.com
+
+notary:
+  enabled: false
+
+trivy:
+  enabled: false
+
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      size: 2Gi
+    jobservice:
+      size: 1Gi
+    database:
+      size: 1Gi
+    redis:
+      size: 1Gi
+
+nginx:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+portal:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+core:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+jobservice:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+registry:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+database:
+  internal:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+redis:
+  internal:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi

@@ -1,0 +1,22 @@
+# headlamp/headlamp. Lens 대체 UI.
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - host: headlamp.lab.origemite.com
+      paths:
+        - path: /
+          type: ImplementationSpecific
+
+serviceMonitor:
+  enabled: false
