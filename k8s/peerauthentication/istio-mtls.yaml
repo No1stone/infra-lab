@@ -1,0 +1,19 @@
+# Istio mTLS — ingress-compare 네임스페이스 STRICT
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: ingress-compare
+spec:
+  mtls:
+    mode: STRICT
+---
+# mesh 전체 STRICT (선택): 아래 주석 해제 후 istio-system에 적용
+# apiVersion: security.istio.io/v1
+# kind: PeerAuthentication
+# metadata:
+#   name: default
+#   namespace: istio-system
+# spec:
+#   mtls:
+#     mode: STRICT
