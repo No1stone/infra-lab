@@ -57,6 +57,7 @@ k8s/
   configmap/
 argocd/
 cli/
+ref/                       # 외부 참고 링크
 ```
 
 진입점은 `nginx` 네임스페이스입니다. 데이터 노드 5개는 각각 파드 1개입니다.
@@ -72,3 +73,7 @@ infra-dev 리소스 서버에서 가져온 1차 워크로드: mysql, redis, kafk
 - `cli/ops/` — 작업 중 나온 실명 명령. 복사해서 바로 실행합니다.
 
 리소스 파일은 `k3d`, `terraform`, `helm`, `argocd`, `kube`, `proxy`입니다.
+
+## 참고
+
+외부 아키텍처·표준 자료는 [`ref/Ref.md`](ref/Ref.md)에 모아 둡니다.
